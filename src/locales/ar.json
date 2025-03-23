@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "منشئ محتوى فريمر",
+    "description": "إنشاء محتوى لمشاريع فريمر الخاصة بك"
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "success": "تم بنجاح!",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "create": "إنشاء",
+    "search": "بحث",
+    "settings": "الإعدادات",
+    "language": "اللغة",
+    "theme": "المظهر",
+    "light": "فاتح",
+    "dark": "داكن",
+    "system": "النظام",
+    "close": "إغلاق"
+  },
+  "banner": {
+    "title": "هل لديك فكرة؟",
+    "description": "حقق رؤيتك من خلال خدماتنا المخصصة للعمل الحر والمصممة لتلبية احتياجاتك.",
+    "getTemplate": "وظفني",
+    "buyMeCoffee": "تبرع لي"
+  },
+  "navigation": {
+    "home": "الرئيسية",
+    "dashboard": "لوحة التحكم",
+    "projects": "المشاريع",
+    "templates": "القوالب",
+    "settings": "الإعدادات"
+  },
+  "auth": {
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "signUp": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟"
+  },
+  "textTypes": {
+    "paragraph": "فقرة",
+    "heading": "عنوان",
+    "list": "قائمة"
+  },
+  "paragraphLength": "طول الفقرة",
+  "headingLength": "طول العنوان",
+  "listLength": "طول القائمة",
+  "listItemsCount": "عدد عناصر القائمة",
+  "textCopiedSuccess": "تم نسخ النص بنجاح",
+  "longContentWarning": "محتوى طويل! يُفضل تقسيمه إلى طبقات نصية متعددة.",
+  "selectTextLayerWarning": "الرجاء تحديد طبقة نص أولا",
+  "contentNotAddedError": "لم يتم إضافة المحتوى الذي تم إنشاؤه إلى الواجهة",
+  "textType": "نوع النص",
+  "category": "الفئة",
+  "textPreview": "معاينة النص",
+  "optimizingList": "جاري تحسين القائمة...",
+  "copy": "نسخ",
+  "regenerate": "إعادة إنشاء",
+  "generate": "إنشاء",
+  "generating": "جاري الإنشاء...",
+  "addToCanvas": "أضف إلى الواجهة",
+  "words": "كلمات",
+  "characters": "أحرف",
+  "lines": "أسطر",
+  "current": "الحالي",
+  "target": "الهدف",
+  "lineCount": "عدد الأسطر",
+  "characterCount": "عدد الأحرف",
+  "itemCount": "عدد العناصر",
+  "categories": {
+    "technology": "التكنولوجيا",
+    "business": "الأعمال",
+    "health": "الصحة والعافية",
+    "environment": "البيئة والاستدامة",
+    "entertainment": "الترفيه",
+    "finance": "المالية والاستثمار",
+    "gaming": "الألعاب والرياضات الإلكترونية",
+    "social": "وسائل التواصل الاجتماعي"
+  }
+} 

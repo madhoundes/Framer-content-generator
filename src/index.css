@@ -1,0 +1,39 @@
+/* Pulse animation for updating indicator */
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+/* Length Control Label Styles */
+.length-control-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.length-control-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+/* RTL support for length control label */
+html[dir="rtl"] .length-control-label {
+  flex-direction: row-reverse;
+}
+
+/* Banner action button hover effects */
+.banner-action-button {
+  transition: opacity 0.3s ease;
+}
+
+.banner-action-button:hover {
+  opacity: 0.8;
+}

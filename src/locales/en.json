@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "Framer Content Generator",
+    "description": "Generate content for your Framer projects"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success!",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "settings": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "close": "Close"
+  },
+  "banner": {
+    "title": "Got an Idea?",
+    "description": "Bring your vision to life with our custom freelance services tailored to your needs.",
+    "getTemplate": "Hire me",
+    "buyMeCoffee": "Buy me a coffee"
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "projects": "Projects",
+    "templates": "Templates",
+    "settings": "Settings"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?"
+  },
+  "textTypes": {
+    "paragraph": "Paragraph",
+    "heading": "Heading",
+    "list": "List"
+  },
+  "paragraphLength": "Paragraph Length",
+  "headingLength": "Heading Length",
+  "listLength": "List Length",
+  "listItemsCount": "List Items Count",
+  "textCopiedSuccess": "Text copied to clipboard",
+  "longContentWarning": "Long content! Consider splitting into multiple text layers.",
+  "selectTextLayerWarning": "Please select a text layer first",
+  "contentNotAddedError": "Generated content was not added to canvas",
+  "textType": "Text Type",
+  "category": "Category",
+  "textPreview": "Text Preview",
+  "optimizingList": "Optimizing list...",
+  "copy": "Copy",
+  "regenerate": "Regenerate",
+  "generate": "Generate",
+  "generating": "Generating...",
+  "addToCanvas": "Add to Canvas",
+  "words": "words",
+  "characters": "characters",
+  "lines": "lines",
+  "current": "Current",
+  "target": "Target",
+  "lineCount": "Line Count",
+  "characterCount": "Character Count",
+  "itemCount": "Item Count",
+  "categories": {
+    "technology": "Technology",
+    "business": "Business",
+    "health": "Health & Wellness",
+    "environment": "Environment & Sustainability",
+    "entertainment": "Entertainment",
+    "finance": "Finance & Investment",
+    "gaming": "Gaming & Esports",
+    "social": "Social Media & Digital Marketing"
+  }
+} 
