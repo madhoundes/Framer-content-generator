@@ -225,11 +225,15 @@ const TextPreview: React.FC<TextPreviewProps> = ({
           margin: 0,
           direction: isRtl ? 'rtl' : 'ltr',
           listStylePosition: 'outside',
-          unicodeBidi: 'embed'
+          unicodeBidi: 'embed',
+          ...(isRtl && {
+            textAlign: 'right',
+            listStyleType: 'arabic-indic',  // Use Arabic numerals
+          })
         }}>
           {text.split('\n').map((item, index) => {
             // Remove the number prefix since we're using <ol>
-            const content = item.replace(/^\d+\.\s*/, '');
+            const content = isRtl ? item : item.replace(/^\d+\.\s*/, '');
             return (
               <li key={index} style={{ 
                 marginBottom: '0.5rem',

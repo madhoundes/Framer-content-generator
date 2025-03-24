@@ -505,8 +505,9 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
     // Create ordered list with numbers, handling RTL properly for Arabic
     let text;
     if (isRtl) {
-      // For RTL (Arabic), format numbers on the right
-      text = enhancedListItems.map((s, index) => `${index + 1}. ${s}`).join('\n');
+      // For RTL (Arabic), format with proper RTL formatting
+      text = enhancedListItems.map((s, index) => `${s}`).join('\n');
+      // Setting just the text content without numbers, as numbers will be handled by the HTML ordered list
     } else {
       // Regular LTR format
       text = enhancedListItems.map((s, index) => `${index + 1}. ${s}`).join('\n');
@@ -600,6 +601,13 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
           // Fix for inverted numbering in RTL lists
           styledText.listReversed = false;
           styledText.listStylePosition = 'outside';
+          // Use HTML <ol> and <li> elements for proper RTL number rendering
+          styledText.useHtmlLists = true;
+          styledText.listDirection = 'rtl';
+          styledText.listStyleType = 'decimal-rtl';
+          styledText.textRtl = true;
+          styledText.listMarginRight = 20;
+          styledText.listNumberAlignment = 'right';
         }
       } else {
         // For English lists, ensure proper formatting
@@ -659,6 +667,13 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
               // Fix for inverted numbering in RTL lists
               attributes.listReversed = false;
               attributes.listStylePosition = 'outside';
+              // Use HTML <ol> and <li> elements for proper RTL number rendering
+              attributes.useHtmlLists = true;
+              attributes.listDirection = 'rtl';
+              attributes.listStyleType = 'decimal-rtl';
+              attributes.textRtl = true;
+              attributes.listMarginRight = 20;
+              attributes.listNumberAlignment = 'right';
             }
           } else {
             // For English lists, ensure proper formatting

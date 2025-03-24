@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import Header from './components/Header'
 import TextGenerator from './components/TextGenerator'
 import Banner from './components/Banner'
+import YouTubeWidget from './components/widgets/YouTubeWidget'
 import './locales/i18n'
 import { useToast } from './context/ToastContext'
 
@@ -277,6 +278,15 @@ function AppContent() {
                             // Fix for inverted numbering in RTL lists
                             attributes.listReversed = false;
                             attributes.listStylePosition = 'outside';
+                            // Explicitly set the list direction for ordered lists
+                            attributes.listDirection = 'rtl';
+                            // Set right margin for list items
+                            attributes.listMarginRight = 20;
+                            // Add extra support for RTL list numbering
+                            attributes.listNumberingReversed = false;
+                            attributes.listStyleType = 'decimal-rtl';
+                            attributes.listStyleTypeRtl = true;
+                            attributes.textRtl = true;
                             // Apply other RTL-specific attributes from styleOptions
                             if (styleOptions.listStyle) {
                                 attributes.listStyle = styleOptions.listStyle;
@@ -351,6 +361,12 @@ function AppContent() {
             overflow: 'auto'
         }}>
             {showBanner && <Banner onClose={() => setShowBanner(false)} />}
+            <YouTubeWidget 
+                videoId="_ztzG1b2xZ4" // YouTube video ID from the provided URL
+                title="How this Plugin Works"
+                description="This quick guide will show you how to use this plugin"
+                thumbnailUrl="/Widget-assets/video-window.png"
+            />
             <Header />
             <main id="main-content" className="main-content">
                 <TextGenerator onAddToCanvas={handleAddTextToCanvas} />
