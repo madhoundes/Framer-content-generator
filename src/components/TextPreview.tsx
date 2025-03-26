@@ -228,12 +228,17 @@ const TextPreview: React.FC<TextPreviewProps> = ({
           unicodeBidi: 'embed',
           ...(isRtl && {
             textAlign: 'right',
-            listStyleType: 'arabic-indic',  // Use Arabic numerals
+            listStyleType: 'arabic-indic',  // Use Arabic numerals for RTL mode
           })
         }}>
           {text.split('\n').map((item, index) => {
-            // Remove the number prefix since we're using <ol>
-            const content = isRtl ? item : item.replace(/^\d+\.\s*/, '');
+            // For RTL, strip the numbers completely as they'll be provided by the list styling
+            // For LTR, just strip the number prefix since we're using <ol>
+            const content = item.replace(/^\d+\.\s*/, '');
+            
+            // Skip empty items
+            if (!content.trim()) return null;
+            
             return (
               <li key={index} style={{ 
                 marginBottom: '0.5rem',
@@ -244,7 +249,7 @@ const TextPreview: React.FC<TextPreviewProps> = ({
                 {content}
               </li>
             );
-          })}
+          }).filter(Boolean)}
         </ol>
       );
     } else if (textType === 'heading') {

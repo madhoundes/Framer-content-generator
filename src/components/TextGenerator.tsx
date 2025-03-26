@@ -655,13 +655,14 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
           styledText.paragraphIndent = 20;
           styledText.paragraphSpacing = 10;
           styledText.listStyle = 'rtl';
-          // Fix for inverted numbering in RTL lists
+          // Don't use listReversed as it causes issues
           styledText.listReversed = false;
           styledText.listStylePosition = 'outside';
-          // Use HTML <ol> and <li> elements for proper RTL number rendering
+          // Use HTML format for proper RTL number rendering
           styledText.useHtmlLists = true;
           styledText.listDirection = 'rtl';
-          styledText.listStyleType = 'decimal-rtl';
+          // Use Arabic numeric type specifically
+          styledText.listStyleType = 'arabic-indic';
           styledText.textRtl = true;
           styledText.listMarginRight = 20;
           styledText.listNumberAlignment = 'right';
@@ -721,13 +722,14 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
               attributes.paragraphIndent = 20;
               attributes.paragraphSpacing = 10;
               attributes.listStyle = 'rtl';
-              // Fix for inverted numbering in RTL lists
+              // Don't use listReversed as it causes issues
               attributes.listReversed = false;
               attributes.listStylePosition = 'outside';
-              // Use HTML <ol> and <li> elements for proper RTL number rendering
+              // Use HTML format for proper RTL number rendering
               attributes.useHtmlLists = true;
               attributes.listDirection = 'rtl';
-              attributes.listStyleType = 'decimal-rtl';
+              // Use Arabic numeric type specifically
+              attributes.listStyleType = 'arabic-indic';
               attributes.textRtl = true;
               attributes.listMarginRight = 20;
               attributes.listNumberAlignment = 'right';
