@@ -513,11 +513,16 @@
         }
 
         .category-dropdown-button .icon {
-          color: #d4d4d4;
+          color: var(--secondary-text-color);
           width: 18px;
-          margin-top: 3px;
-          margin-left: 7px;
+          /* margin-top: 3px; */
+          /* margin-left: 7px; */
           transition: transform 0.3s ease;
+        }
+
+        /* Override icon color in light mode to be darker */
+        :root:not(.dark-theme) .category-dropdown-button .icon {
+          color: #4B5563; /* Darker gray for light mode */
         }
 
         /* Add rotation animation for the icon */
@@ -1331,13 +1336,14 @@
         html[dir="rtl"] .toast-container {
           display: flex;
           flex-direction: column;
-          align-items: flex-end;
+          align-items: center;
           justify-content: flex-start;
           padding-left: 10px;
           padding-right: 10px;
           width: 100%;
-          right: -5%;
-          left: auto;
+          right: 0;
+          left: 0;
+          top: 16px;
           position: fixed;
         }
 

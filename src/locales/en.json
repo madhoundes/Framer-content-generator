@@ -5,7 +5,7 @@
   },
   "common": {
     "loading": "Loading...",
-    "error": "Error",
+    "error": "An error occurred",
     "success": "Success!",
     "cancel": "Cancel",
     "save": "Save",
@@ -22,8 +22,8 @@
     "close": "Close"
   },
   "banner": {
-    "title": "Got an Idea?",
-    "description": "Bring your vision to life with our custom freelance services tailored to your needs.",
+    "title": "Got a project in mind?",
+    "description": "Bring your vision to life with our custom freelance services, tailored to your needs.",
     "getTemplate": "Hire me",
     "buyMeCoffee": "Buy me a coffee"
   },
@@ -40,7 +40,7 @@
     "signUp": "Sign Up",
     "email": "Email",
     "password": "Password",
-    "forgotPassword": "Forgot password?"
+    "forgotPassword": "Forgot Password?"
   },
   "textTypes": {
     "paragraph": "Paragraph",
@@ -51,10 +51,11 @@
   "headingLength": "Heading Length",
   "listLength": "List Length",
   "listItemsCount": "List Items Count",
-  "textCopiedSuccess": "Text copied to clipboard",
+  "listItemCountWarning": "Warning: Generated {{count}} items instead of requested count. Using best match.",
+  "textCopiedSuccess": "Text copied successfully",
   "longContentWarning": "Long content! Consider splitting into multiple text layers.",
   "selectTextLayerWarning": "Please select a text layer first",
-  "contentNotAddedError": "Generated content was not added to canvas",
+  "contentNotAddedError": "Generated content was not added to the canvas",
   "textType": "Text Type",
   "category": "Category",
   "textPreview": "Text Preview",
@@ -80,6 +81,6 @@
     "entertainment": "Entertainment",
     "finance": "Finance & Investment",
     "gaming": "Gaming & Esports",
-    "social": "Social Media & Digital Marketing"
+    "social": "Social Media"
   }
 } 

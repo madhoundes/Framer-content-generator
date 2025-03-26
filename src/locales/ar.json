@@ -51,6 +51,7 @@
   "headingLength": "طول العنوان",
   "listLength": "طول القائمة",
   "listItemsCount": "عدد عناصر القائمة",
+  "listItemCountWarning": "تنبيه: تم إنشاء {{count}} عنصر بدلاً من العدد المطلوب. جاري استخدام أفضل تطابق.",
   "textCopiedSuccess": "تم نسخ النص بنجاح",
   "longContentWarning": "محتوى طويل! يُفضل تقسيمه إلى طبقات نصية متعددة.",
   "selectTextLayerWarning": "الرجاء تحديد طبقة نص أولا",

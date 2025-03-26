@@ -6,6 +6,7 @@ import TextTypeSelector, { TextType } from './TextTypeSelector';
 import LengthControl, { LengthControlType, LabelType } from './LengthControl';
 import Icon from './ui/icon';
 import { useToast } from '../context/ToastContext';
+import { detectTextDirection, getTextAlignment } from '../utils/detectTextDirection';
 
 // Sample text for each category
 type ContentCategory = 'technology' | 'business' | 'health' | 'environment' | 'entertainment' | 'finance' | 'gaming' | 'social';
@@ -165,10 +166,12 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
   const currentLanguage = i18n.language;
   const categoryTexts = currentLanguage === 'ar' ? arabicCategoryTexts : englishCategoryTexts;
   const isRtl = currentLanguage === 'ar';
+  // State for automatically detected text direction
+  const [detectedDirection, setDetectedDirection] = useState<'rtl' | 'ltr'>(isRtl ? 'rtl' : 'ltr');
   
   // Add debounce ref for handling rapid slider adjustments
-  const generateTextTimeoutRef = useRef<number | null>(null);
-  const validationTimeoutRef = useRef<number | null>(null);
+  const generateTextTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   // Helper function to count words in text
   const countWords = (text: string): number => {
@@ -461,7 +464,21 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
     const shuffled = [...textsForCategory].sort(() => 0.5 - Math.random());
     
     // Get all sentences from all texts
-    const allSentences = shuffled.join('. ').split('.');
+    let allSentences: string[];
+    
+    // Use different separator for Arabic text to better handle sentence boundaries
+    if (detectedDirection === 'rtl') {
+      // For Arabic, we need to be more careful with sentence splitting
+      allSentences = [];
+      shuffled.forEach(text => {
+        // Split on Arabic sentence endings (period, question mark, exclamation)
+        const sentences = text.split(/[.؟!]/);
+        allSentences.push(...sentences);
+      });
+    } else {
+      allSentences = shuffled.join('. ').split('.');
+    }
+    
     const filteredSentences = allSentences
       .map(s => s.trim())
       .filter(s => s.length > 10);
@@ -480,7 +497,7 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
     // Enhance list items to make them more list-like
     const enhancedListItems = listItems.map(item => {
       // Define action verbs based on language
-      const actionVerbs = isRtl 
+      const actionVerbs = detectedDirection === 'rtl' 
         ? ['فكر في', 'استكشف', 'راجع', 'حلل', 'طبق', 'طور', 'ابتكر', 'قيّم', 'راقب', 'تابع'] 
         : ['Consider', 'Explore', 'Review', 'Analyze', 'Implement', 'Develop', 'Create', 'Assess', 'Monitor', 'Evaluate'];
       
@@ -489,7 +506,7 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
         const randomVerb = actionVerbs[Math.floor(Math.random() * actionVerbs.length)];
         // Ensure we don't repeat action verbs at the beginning
         if (!item.startsWith(randomVerb)) {
-          if (isRtl) {
+          if (detectedDirection === 'rtl') {
             // For Arabic, just concatenate the verb with the sentence
             return `${randomVerb} ${item}`;
           } else {
@@ -504,13 +521,22 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
     
     // Create ordered list with numbers, handling RTL properly for Arabic
     let text;
-    if (isRtl) {
-      // For RTL (Arabic), format with proper RTL formatting
-      text = enhancedListItems.map((s, index) => `${s}`).join('\n');
-      // Setting just the text content without numbers, as numbers will be handled by the HTML ordered list
+    if (detectedDirection === 'rtl') {
+      // For RTL (Arabic), include the numbers with correct RTL formatting
+      text = enhancedListItems.map((s, index) => `${index + 1}. ${s}`).join('\n');
     } else {
       // Regular LTR format
       text = enhancedListItems.map((s, index) => `${index + 1}. ${s}`).join('\n');
+    }
+    
+    if (enhancedListItems.length !== lengthValue) {
+      console.warn(`Warning: Generated ${enhancedListItems.length} items instead of requested ${lengthValue}`);
+      if (showToast) {
+        showToast({
+          message: t('listItemCountWarning', { count: enhancedListItems.length }),
+          type: 'warning'
+        });
+      }
     }
     
     setGeneratedText(text);
@@ -547,6 +573,37 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
     setGeneratedText(paragraph);
   };
 
+  // Set initial text direction based on UI language
+  useEffect(() => {
+    setDetectedDirection(isRtl ? 'rtl' : 'ltr');
+  }, [isRtl]);
+
+  // Update detected direction whenever generated text changes
+  useEffect(() => {
+    if (generatedText) {
+      // If UI is in Arabic, prioritize RTL alignment but still detect for mixed content
+      if (isRtl) {
+        setDetectedDirection('rtl');
+        console.log(`Text direction set to RTL based on UI language: ${currentLanguage}`);
+      } else {
+        const direction = detectTextDirection(generatedText);
+        setDetectedDirection(direction);
+        console.log(`Text direction detected: ${direction}, UI language: ${currentLanguage}`);
+      }
+    }
+  }, [generatedText, isRtl, currentLanguage]);
+
+  // Update text direction when language changes
+  useEffect(() => {
+    // When language changes, prioritize the UI language setting
+    setDetectedDirection(isRtl ? 'rtl' : 'ltr');
+    
+    // If there's already text, regenerate it with new language
+    if (generatedText) {
+      generateNewText();
+    }
+  }, [currentLanguage]);
+
   // Handle adding to canvas (works for all text types)
   const handleAddToCanvas = () => {
     // Get selected layers to check if we're updating existing text
@@ -574,8 +631,8 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
         textType: textType
       };
       
-      // Add RTL direction and text alignment for Arabic
-      if (isRtl) {
+      // Add RTL direction and text alignment for Arabic based on detected direction
+      if (detectedDirection === 'rtl') {
         styledText.direction = 'rtl';
         styledText.textAlign = 'right';
         // Set the writing direction to RTL for proper text rendering
@@ -641,7 +698,7 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
           };
           
           // Add RTL direction for Arabic
-          if (isRtl) {
+          if (detectedDirection === 'rtl') {
             attributes.direction = 'rtl';
             attributes.textAlign = 'right';
             // Set the writing direction to RTL for proper text rendering
@@ -687,6 +744,9 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
           console.log("Updating text layer with attributes:", attributes);
           
           (framer as any).setAttributes(textLayer.id, attributes);
+          
+          // Generate new text immediately after updating
+          generateNewText();
         } catch (error) {
           console.error('Error updating text layer:', error);
         }
@@ -784,7 +844,7 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
         text={generatedText}
         textType={textType}
         isUpdating={isRealTimeUpdating}
-        isRtl={isRtl}
+        isRtl={detectedDirection === 'rtl'}
         isLoading={isGenerating || isValidating}
       />
       

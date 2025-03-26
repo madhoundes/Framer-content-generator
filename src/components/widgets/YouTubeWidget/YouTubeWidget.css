@@ -50,6 +50,13 @@
   flex-direction: column;
   animation: fadeIn 0.3s ease-in-out;
   border: 1px solid rgba(82, 82, 82, 1);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+/* Increase container size when playing video */
+.youtube-widget-container.playing {
+  width: 640px;
+  height: 480px;
 }
 
 @keyframes fadeIn {
@@ -204,6 +211,20 @@
   transform: translate(-50%, -50%) scale(1.1);
 }
 
+/* Quality label for the thumbnail */
+.youtube-thumbnail-quality {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  z-index: 20;
+}
+
 .youtube-widget-footer {
   padding: 8px 21px 18px 21px;
   margin-top: auto;
@@ -254,4 +275,72 @@
   margin: 0;
   cursor: pointer;
   accent-color: #3a8fff;
+}
+
+/* YouTube Widget Player */
+.youtube-widget-player {
+  position: relative;
+  width: 100%;
+  height: 360px;
+  background-color: #000;
+  flex: 1;
+  overflow: hidden;
+}
+
+.youtube-widget-player iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Player controls container */
+.youtube-widget-controls {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 20;
+}
+
+.youtube-widget-back-button, 
+.youtube-widget-fullscreen-button {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.youtube-widget-back-button:hover, 
+.youtube-widget-fullscreen-button:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+  transform: scale(1.05);
+}
+
+/* Pulse animation for fullscreen button to encourage clicking */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.youtube-widget-fullscreen-button {
+  animation: pulse 2s infinite;
 } 

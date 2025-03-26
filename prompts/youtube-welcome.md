@@ -41,3 +41,24 @@ Add a checkbox under the YouTube video widget with the label: **"Don’t show th
 1. Enhances user control and experience.
 2. Reduces unnecessary clutter for returning users.
 
+==============================================================================================
+
+# Feature Request: Embedded YouTube Player
+## Description
+Add functionality to open and play YouTube videos directly within the plugin interface.
+
+## Requirements
+1. Video should play in-place when triggered
+2. No external browser redirection
+3. Maintain current UI layout while playing
+4. Include standard player controls (play/pause, volume, etc.)
+
+## Technical Notes
+- Use YouTube's embed API
+- Responsive design to maintain plugin layout
+- Auto-pause when user interacts with other plugin elements
+
+## Benefits
+- Seamless user experience
+- No workflow interruption
+- Consistent interface design

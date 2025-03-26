@@ -27,19 +27,32 @@ const YouTubeWidget: React.FC<YouTubeWidgetProps> = ({
   const [isVisible, setIsVisible] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
-
-  // Check if widget should be shown on initial render
+  const [isPlaying, setIsPlaying] = useState(false);
+  
+  // Remove localStorage check to always show widget
   useEffect(() => {
-    const isDismissed = localStorage.getItem(WIDGET_DISMISS_KEY) === 'true';
-    if (isDismissed) {
-      setIsVisible(false);
-    }
-  }, []);
+    setIsVisible(true);
+    localStorage.removeItem(WIDGET_DISMISS_KEY);
+    
+    // Pause video when user clicks outside the widget
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target && isPlaying && target.classList.contains('youtube-widget-overlay')) {
+        setIsPlaying(false);
+      }
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isPlaying]);
 
   const handleClose = () => {
-    // Save preference if "don't show again" is checked
-    if (dontShowAgain) {
-      localStorage.setItem(WIDGET_DISMISS_KEY, 'true');
+    // If video is playing, stop it first
+    if (isPlaying) {
+      setIsPlaying(false);
     }
     
     // Start the closing animation
@@ -56,7 +69,8 @@ const YouTubeWidget: React.FC<YouTubeWidgetProps> = ({
   };
 
   const handleVideoClick = () => {
-    window.open(`https://youtu.be/_ztzG1b2xZ4?si=5oXaWteSNFDFxxP1`, '_blank');
+    // Instead of opening in a new tab, toggle embedded player
+    setIsPlaying(true);
   };
 
   if (!isVisible) {
@@ -65,10 +79,16 @@ const YouTubeWidget: React.FC<YouTubeWidgetProps> = ({
 
   // Use the provided thumbnail URL or default to our imported thumbnail
   const thumbnail = thumbnailUrl || thumbnailImage;
+  
+  // Build YouTube embed URL with high quality parameters
+  // vq=hd1080 sets the quality to 1080p
+  // fps=60 allows 60fps playback
+  // hd=1 forces HD mode
+  const youtubeEmbedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&vq=hd1080&hd=1&fps=60`;
 
   return (
     <div className={`youtube-widget-overlay ${isClosing ? 'closing' : ''}`}>
-      <div className={`youtube-widget-container ${isClosing ? 'closing' : ''}`}>
+      <div className={`youtube-widget-container ${isClosing ? 'closing' : ''} ${isPlaying ? 'playing' : ''}`}>
         <div className="youtube-widget-header">
           <h2>{title}</h2>
           <button className="youtube-widget-close" onClick={handleClose} aria-label="Close">
@@ -76,18 +96,30 @@ const YouTubeWidget: React.FC<YouTubeWidgetProps> = ({
           </button>
         </div>
 
-        <div className="youtube-widget-thumbnail" onClick={handleVideoClick}>
-          <img src={thumbnail} alt={title} className="youtube-thumbnail" />
-          
-          <div className="youtube-widget-branding">
-            <img src={avatarImage} alt="Logo" />
-            <span>Framer Content Generator Plugin</span>
+        {isPlaying ? (
+          <div className="youtube-widget-player">
+            <iframe
+              src={youtubeEmbedUrl}
+              title={title}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+              allowFullScreen
+            ></iframe>
           </div>
-          
-          <div className="youtube-play-button">
-            <img src={youtubeIcon} alt="Play" />
+        ) : (
+          <div className="youtube-widget-thumbnail" onClick={handleVideoClick}>
+            <img src={thumbnail} alt={title} className="youtube-thumbnail" />
+            
+            <div className="youtube-widget-branding">
+              <img src={avatarImage} alt="Logo" />
+              <span>Framer Content Generator Plugin</span>
+            </div>
+            
+            <div className="youtube-play-button">
+              <img src={youtubeIcon} alt="Play" />
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="youtube-widget-footer">
           <div className="youtube-widget-dont-show">

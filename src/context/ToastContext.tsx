@@ -86,8 +86,14 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           style={{
             position: 'fixed',
             top: '16px',
-            right: '16px',
+            left: '0',
+            right: '0',
             zIndex: 1000,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%',
+            pointerEvents: 'none',
           }}
         >
           {toasts.map(toast => (
@@ -109,6 +115,7 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
                 alignItems: 'center',
                 minWidth: '200px',
                 maxWidth: '400px',
+                pointerEvents: 'auto',
               }}
             >
               <span>{toast.message}</span>

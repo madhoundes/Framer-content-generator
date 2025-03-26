@@ -172,16 +172,41 @@ function useTheme() {
 function AppContent() {
     const { t, i18n } = useTranslation()
     const { showToast } = useToast()
+    const [direction, setDirection] = useState('ltr')
     const [showBanner, setShowBanner] = useState(true)
-    const [appReady, setAppReady] = useState(false)
-    
+    const [loading, setLoading] = useState(true)
+    const [showYouTubeWidget, setShowYouTubeWidget] = useState(true)
+
+    // Force showing YouTube widget regardless of previous visits
+    useEffect(() => {
+        // Remove the visited flag so the widget will show again on future visits too
+        localStorage.removeItem('framer_content_generator_visited')
+    }, [])
+
+    // Initialize i18n direction
+    useEffect(() => {
+        // Set direction based on language
+        setDirection(i18n.language === 'ar' ? 'rtl' : 'ltr')
+        
+        // Listen for language changes
+        const handleLanguageChange = (lng: string) => {
+            setDirection(lng === 'ar' ? 'rtl' : 'ltr')
+        }
+        
+        i18n.on('languageChanged', handleLanguageChange)
+        
+        return () => {
+            i18n.off('languageChanged', handleLanguageChange)
+        }
+    }, [i18n])
+
     // Initialize theme functionality without exposing in component
     useTheme();
 
     // Set app ready state after a short delay to ensure everything is loaded
     useEffect(() => {
         const timer = setTimeout(() => {
-            setAppReady(true)
+            setLoading(false)
             console.log("App marked as ready");
         }, 500);
         
@@ -319,7 +344,7 @@ function AppContent() {
     }
 
     // Show loading state if app is not ready yet
-    if (!appReady) {
+    if (loading) {
         return (
             <div style={{
                 display: 'flex',
@@ -361,12 +386,14 @@ function AppContent() {
             overflow: 'auto'
         }}>
             {showBanner && <Banner onClose={() => setShowBanner(false)} />}
-            <YouTubeWidget 
-                videoId="_ztzG1b2xZ4" // YouTube video ID from the provided URL
-                title="How this Plugin Works"
-                description="This quick guide will show you how to use this plugin"
-                thumbnailUrl="/Widget-assets/video-window.png"
-            />
+            {showYouTubeWidget && (
+                <YouTubeWidget 
+                    videoId="_ztzG1b2xZ4" // YouTube video ID from the provided URL
+                    title="How this Plugin Works"
+                    description="This quick guide will show you how to use this plugin to generate content, support your customers, and explore features like Visual Recognition and LogoView."
+                    thumbnailUrl="/Widget-assets/video-window.png"
+                />
+            )}
             <Header />
             <main id="main-content" className="main-content">
                 <TextGenerator onAddToCanvas={handleAddTextToCanvas} />
