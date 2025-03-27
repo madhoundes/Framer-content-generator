@@ -26,15 +26,22 @@ const YouTubeWidget: React.FC<YouTubeWidgetProps> = ({
 }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
-  const [dontShowAgain, setDontShowAgain] = useState(false);
+  const [dontShowAgain, setDontShowAgain] = useState(() => {
+    // Initialize from localStorage
+    return localStorage.getItem(WIDGET_DISMISS_KEY) === 'true';
+  });
   const [isPlaying, setIsPlaying] = useState(false);
   
-  // Remove localStorage check to always show widget
+  // Check localStorage on mount
   useEffect(() => {
-    setIsVisible(true);
-    localStorage.removeItem(WIDGET_DISMISS_KEY);
-    
-    // Pause video when user clicks outside the widget
+    const shouldHide = localStorage.getItem(WIDGET_DISMISS_KEY) === 'true';
+    if (shouldHide) {
+      setIsVisible(false);
+    }
+  }, []);
+
+  // Handle clicks outside the widget
+  useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (target && isPlaying && target.classList.contains('youtube-widget-overlay')) {
@@ -58,6 +65,11 @@ const YouTubeWidget: React.FC<YouTubeWidgetProps> = ({
     // Start the closing animation
     setIsClosing(true);
     
+    // Save preference if "don't show again" is checked
+    if (dontShowAgain) {
+      localStorage.setItem(WIDGET_DISMISS_KEY, 'true');
+    }
+    
     // Delay the actual removal from DOM until animation completes
     setTimeout(() => {
       setIsVisible(false);
@@ -65,7 +77,13 @@ const YouTubeWidget: React.FC<YouTubeWidgetProps> = ({
   };
 
   const handleDontShowChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDontShowAgain(e.target.checked);
+    const checked = e.target.checked;
+    setDontShowAgain(checked);
+    if (checked) {
+      localStorage.setItem(WIDGET_DISMISS_KEY, 'true');
+    } else {
+      localStorage.removeItem(WIDGET_DISMISS_KEY);
+    }
   };
 
   const handleVideoClick = () => {
