@@ -1,9 +1,0 @@
-{
-  "id": "49c777",
-  "name": "Framer Text Generator",
-  "description": "Generate text content for your Framer projects with support for English and Arabic languages.",
-  "modes": [
-    "canvas"
-  ],
-  "icon": "/icon.svg"
-}

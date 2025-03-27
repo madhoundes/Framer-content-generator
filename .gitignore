@@ -1,30 +1,57 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
 # Dependencies
 node_modules
-dist-ssr
+.pnp
+.pnp.js
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Production
+/dist
+/build
 
-# Environment variables
+# Testing
+/coverage
+
+# Environment
 .env
 .env.local
 .env.development.local
 .env.test.local
-.env.production.local 
+.env.production.local
+
+# IDE
+.vscode
+.idea
+*.sublime-workspace
+*.sublime-project
+.cursor
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# Plugin specific
+*.zip
+prompts/
+screenshots/
+*-marketplace/
+*-marketplace-final/
+*-submission/
+banner-component/
+temp/
+*.jpg
+*.png
+!public/**/*.png
+!public/**/*.jpg
+!src/**/*.png
+!src/**/*.jpg 

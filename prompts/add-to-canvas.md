@@ -1,1 +1,0 @@
-When the user clicks 'Add to Canvas,' ensure the generated text content is wrapped in Framer, grows automatically with line breaks, and spans the full width of its container
