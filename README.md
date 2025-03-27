@@ -1,5 +1,7 @@
 # Framer Text Generator Plugin
 
+<img src="https://github.com/madhoundes/Framer-content-generator/blob/main/Cover-nwq.jpg?raw=true" size="800" />
+
 A Framer plugin for generating text content with support for English and Arabic languages.
 
 ## Features
