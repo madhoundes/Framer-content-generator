@@ -25,6 +25,7 @@
     "title": "Got a project in mind?",
     "description": "Bring your vision to life with our custom freelance services, tailored to your needs.",
     "getTemplate": "Hire me",
+    "hireMe": "Upgrade your website and get 50% off",
     "buyMeCoffee": "Buy me a coffee"
   },
   "navigation": {
@@ -73,6 +74,9 @@
   "lineCount": "Line Count",
   "characterCount": "Character Count",
   "itemCount": "Item Count",
+  "approaching": "Approaching",
+  "maximum": "maximum",
+  "exceededLimitError": "Text exceeds the 50 line maximum. Please reduce the length.",
   "categories": {
     "technology": "Technology",
     "business": "Business",

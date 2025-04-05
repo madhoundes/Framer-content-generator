@@ -75,6 +75,17 @@ const Banner: React.FC<BannerProps> = ({ onClose }) => {
             </div>
           </a>
         </div>
+        <div className="banner-footer">
+          <a 
+            href="https://framer.link/madhoundes" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="banner-action-label"
+            data-text={t('banner.hireMe')}
+          >
+            {t('banner.hireMe')}
+          </a>
+        </div>
       </div>
     </div>
   );

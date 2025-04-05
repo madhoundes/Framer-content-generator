@@ -50,38 +50,48 @@
           --length-control-slider-bg: #e5e7eb;
           --length-control-slider-fill: #3b82f6;
           --length-control-slider-border: #d1d5db;
+          
+          /* Scrollbar colors - Light theme */
+          --scrollbar-track: #f1f1f1;
+          --scrollbar-thumb: #c1c1c1;
+          --scrollbar-thumb-hover: #a1a1a1;
         }
 
         :root.dark-theme {
           /* Dark mode variables */
-          --background-color: #1e1e1e;
+          --background-color: #1a1a1a;
           --text-color: #ffffff;
           --secondary-text-color: #a0a0a0;
           --border-color: #333333;
-          --container-bg: #2c2c2c;
-          --dropdown-bg: #2c2c2c;
-          --dropdown-hover: #3b3b3b;
-          --card-bg: #2c2c2c;
+          --container-bg: #242424;
+          --dropdown-bg: #242424;
+          --dropdown-hover: #333333;
+          --card-bg: #242424;
           --card-border: #333333;
-          --icon-color: #d4d4d4;
+          --icon-color: #e0e0e0;
           --toggle-bg: #3b3b3b;
           --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
           --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.25);
-          --logo-bg: #2c2c2c;
-          --logo-letter-bg: #1e1e1e;
-          --language-switcher-bg: #404040;
-          --language-switcher-border: #525252;
-          --text-type-selector-bg: #404040;
-          --text-type-selector-border: #525252;
-          --category-dropdown-bg: #404040;
-          --category-dropdown-border: #525252;
-          --text-preview-bg: #404040;
-          --text-preview-border: #525252;
-          --action-buttons-bg: #404040;
-          --action-buttons-border: #525252;
-          --length-control-slider-bg: #27272a;
+          --logo-bg: #242424;
+          --logo-letter-bg: #1a1a1a;
+          --language-switcher-bg: #333333;
+          --language-switcher-border: #444444;
+          --text-type-selector-bg: #333333;
+          --text-type-selector-border: #444444;
+          --category-dropdown-bg: #333333;
+          --category-dropdown-border: #444444;
+          --text-preview-bg: #333333;
+          --text-preview-border: #444444;
+          --action-buttons-bg: #242424;
+          --action-buttons-border: #333333;
+          --length-control-slider-bg: #333333;
           --length-control-slider-fill: #3b82f6;
-          --length-control-slider-border: #3f3f46;
+          --length-control-slider-border: #444444;
+          
+          /* Scrollbar colors - Dark theme - Increased contrast */
+          --scrollbar-track: #242424;
+          --scrollbar-thumb: #555555;
+          --scrollbar-thumb-hover: #777777;
         }
 
         html {
@@ -196,7 +206,7 @@
         .main-content {
           padding: 1rem;
           flex-grow: 1;
-          padding-bottom: 1rem; /* Extra padding at the bottom */
+          padding-bottom: calc(1rem + 68px); /* Added padding for the fixed footer (68px is footer height) */
           overflow: auto; /* Allow scrolling if needed */
         }
 
@@ -702,16 +712,18 @@
           border-radius: 8px;
           border: 1px solid var(--text-preview-border);
           padding: 16px;
-          height: 10rem; /* Increased height from 6rem to 10rem */
+          height: 12rem; /* Increased height from 10rem to 12rem for longer content */
           overflow-y: auto;
           font-size: 0.875rem;
           box-shadow: var(--shadow-sm);
-          transition: box-shadow 0.3s ease;
+          transition: box-shadow 0.3s ease, height 0.3s ease;
           color: var(--text-color);
+          scroll-behavior: smooth; /* Add smooth scrolling */
         }
 
         .text-preview:focus-within {
           box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+          height: 16rem; /* Expand height when focused for easier reading of long content */
         }
 
         /* Paragraph Length Toggle */
@@ -944,7 +956,7 @@
           direction: ltr;
         }
 
-        /* Action Buttons - Updated based on Figma JSON */
+        /* Action Buttons - Updated based on Framer's design */
         .action-buttons {
           display: flex;
           gap: 12px;
@@ -962,6 +974,7 @@
           margin: 0 auto;
           transition: transform 0.3s ease;
           justify-content: center;
+          box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .action-buttons-inner {
@@ -974,15 +987,15 @@
         .generate-button {
           flex: 1;
           padding: 0.5rem 1rem;
-          background-color: #262626;
+          background-color: #252525;
           color: white;
-          border: 1px solid #525252;
+          border: 1px solid #444444;
           border-radius: 6px;
           font-size: 0.875rem;
           font-weight: 500;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.09);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.09);
           outline: none;
           position: relative;
           overflow: hidden;
@@ -991,6 +1004,7 @@
 
         .generate-button:hover {
           background-color: #333333;
+          border-color: #555555;
         }
 
         .generate-button:active {
@@ -1010,15 +1024,15 @@
         .add-to-canvas-button {
           flex: 1;
           padding: 0.5rem 1rem;
-          background-color: #3b82f6;
+          background-color: #0055FF;
           color: white;
-          border: 1px solid #60a5fa;
+          border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 6px;
           font-size: 0.875rem;
           font-weight: 500;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.09);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.09);
           outline: none;
           position: relative;
           overflow: hidden;
@@ -1026,7 +1040,7 @@
         }
 
         .add-to-canvas-button:hover {
-          background-color: #2563eb;
+          background-color: #0044CC;
         }
 
         .add-to-canvas-button:active {
@@ -1085,11 +1099,11 @@
         }
 
         .banner-content {
-          background: rgba(64, 64, 64, 0.7);
-          backdrop-filter: blur(7.199999809265137px);
+          background: rgba(64, 64, 64, 0.8);
+          backdrop-filter: blur(10px);
           border: 1px solid #525252;
           border-radius: 14px;
-          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
           padding: 13px;
           display: flex;
           flex-direction: column;
@@ -1135,7 +1149,7 @@
         .banner-actions {
           display: flex;
           justify-content: space-between;
-          gap: 11px;
+          gap: 8px; /* Reduced from 11px to accommodate three buttons */
           width: 100%;
         }
 
@@ -1155,13 +1169,110 @@
           text-align: center;
         }
 
+        .banner-action-button:hover {
+          opacity: 0.7; /* 30% decrease in opacity on hover */
+        }
+
         .banner-action-button.get-template {
           background-color: #171717;
           color: white;
         }
 
-        .banner-action-button.get-template:hover {
-          background-color: #262626;
+        /* Updated styling for the hire-me link */
+        .banner-action-label {
+          /* Remove button styling */
+          background-color: transparent;
+          border: none;
+          box-shadow: none;
+          padding: 0px 0; /* Adjust padding for alignment */
+          
+          /* Text styling with slightly reduced opacity */
+          color: rgba(181, 181, 181, 0.85);
+          font-size: 12.8px;
+          font-weight: 500;
+          text-decoration: none;
+          cursor: pointer;
+          
+          /* Layout */
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          position: relative;
+        }
+
+        /* Cursor-like animation keyframes */
+        @keyframes cursorThinking {
+          0% {
+            background-position: -100% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 300% 50%;
+          }
+        }
+
+        /* Animated gradient overlay */
+        .banner-action-label::before {
+          content: attr(data-text);
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          
+          /* Multi-point gradient for a more subtle effect */
+          background-image: linear-gradient(
+            90deg,
+            rgba(181, 181, 181, 0.85) 0%,
+            rgba(181, 181, 181, 0.85) 20%,
+            rgba(255, 255, 255, 1) 35%,
+            rgba(255, 255, 255, 1) 45%,
+            rgba(181, 181, 181, 0.85) 60%,
+            rgba(181, 181, 181, 0.85) 100%
+          );
+          
+          background-size: 300% 100%;
+          background-repeat: no-repeat;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          
+          /* Cursor-like timing and easing - with no delay between cycles */
+          animation: cursorThinking 3.4s linear infinite;
+          z-index: 1;
+          text-shadow: none;
+          font-weight: 500; /* Match the base font weight */
+        }
+
+        /* Keep animation running during hover */
+        .banner-action-label:hover::before {
+          animation: cursorThinking 3.4s linear infinite;
+        }
+
+        /* Fallback for browsers that don't support background-clip: text */
+        @supports not (background-clip: text) {
+          .banner-action-label {
+            animation: textPulseFallback 3.4s ease infinite;
+          }
+          
+          @keyframes textPulseFallback {
+            0%, 100% { color: #b5b5b5; }
+            50% { color: #ffffff; }
+          }
+        }
+
+        .banner-action-button.hire-me {
+          background-color: #0055FF;
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 7px 12px;
+          border-radius: 8px;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
         .banner-action-button.buy-coffee {
@@ -1173,10 +1284,6 @@
           padding: 7px 12px;
           border-radius: 8px;
           box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-
-        .banner-action-button.buy-coffee:hover {
-          background-color: #FFE44D;
         }
 
         .banner-action-button.buy-coffee:active {
@@ -1535,6 +1642,55 @@
         html[dir="rtl"] .category-dropdown-button .icon {
           margin-left: -3px;
         }
+
+        .banner-footer {
+          text-align: center;
+          margin-top: 4px; /* Add some space above the footer link */
+        }
+
+        .banner-actions button:hover {
+          opacity: 0.7!important; /* Decrease opacity by 30% on hover */
+        }
+
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar {
+          width: 10px;
+          height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: var(--scrollbar-track);
+          border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: var(--scrollbar-thumb);
+          border-radius: 4px;
+          border: 2px solid var(--scrollbar-track);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: var(--scrollbar-thumb-hover);
+        }
+
+        /* Firefox scrollbar styling */
+        * {
+          scrollbar-width: thin;
+          scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+        }
+
+        /* Define keyframes for the infinite gradient animation */
+        @keyframes gradientMove {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
       </style>
     </head>
     <body>
@@ -1546,14 +1702,43 @@
         document.addEventListener('DOMContentLoaded', function() {
           // Check if the page is loaded within Framer
           if (window.self !== window.top) {
-            // Use prefers-color-scheme to detect Framer's theme setting
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (prefersDark) {
-              document.documentElement.classList.add('dark-theme');
-              localStorage.setItem('theme', 'dark');
-            } else {
-              document.documentElement.classList.remove('dark-theme');
-              localStorage.setItem('theme', 'light');
+            // Check for Framer theme using the data-framer-theme attribute
+            const detectFramerTheme = () => {
+              try {
+                // Try to access parent document to check Framer's theme
+                if (window.parent && window.parent.document.documentElement.getAttribute('data-framer-theme') === 'dark') {
+                  document.documentElement.classList.add('dark-theme');
+                  localStorage.setItem('theme', 'dark');
+                } else {
+                  document.documentElement.classList.remove('dark-theme');
+                  localStorage.setItem('theme', 'light');
+                }
+              } catch (e) {
+                // Fallback to using prefers-color-scheme if we can't access parent
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) {
+                  document.documentElement.classList.add('dark-theme');
+                  localStorage.setItem('theme', 'dark');
+                } else {
+                  document.documentElement.classList.remove('dark-theme');
+                  localStorage.setItem('theme', 'light');
+                }
+              }
+            }
+            
+            // Initial detection
+            detectFramerTheme();
+            
+            // Set up an observer to detect theme changes in Framer
+            const themeObserver = new MutationObserver(detectFramerTheme);
+            try {
+              themeObserver.observe(window.parent.document.documentElement, {
+                attributes: true,
+                attributeFilter: ['data-framer-theme']
+              });
+            } catch (e) {
+              // If we can't access parent for observation, set up media query listener as fallback
+              window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', detectFramerTheme);
             }
           }
         });

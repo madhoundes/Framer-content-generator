@@ -249,9 +249,17 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
     } else if (textType === 'paragraph') {
       // For paragraphs, validate sentence count but don't show errors
       actualCount = countSentences(generatedText);
+      
+      // Check if the estimated line count exceeds the maximum of 50
+      const estimatedLines = estimateLines(generatedText);
+      if (estimatedLines > 50) {
+        setValidationError(t('exceededLimitError'));
+        return false;
+      }
+      
       isValid = actualCount === lengthValue;
       
-      // Always return true for paragraphs to prevent error messages
+      // Clear validation error if no issues
       setValidationError(null);
       return true;
     }
@@ -259,7 +267,7 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
     // Default case - reset validation state
     setValidationError(null);
     return true;
-  }, [generatedText, textType, lengthValue]);
+  }, [generatedText, textType, lengthValue, t]);
   
   // Initialize with default text based on type
   useEffect(() => {
@@ -554,11 +562,15 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
       .map(s => s.trim())
       .filter(s => s.length > 10);
     
-    // Ensure we have enough sentences
+    // Ensure we have enough sentences for the increased maximum (up to 50)
     if (filteredSentences.length < lengthValue) {
-      // If we don't have enough sentences, duplicate what we have
+      // If we don't have enough sentences, repeat what we have
+      const originalSentences = [...filteredSentences];
       while (filteredSentences.length < lengthValue) {
-        filteredSentences.push(...filteredSentences);
+        // Shuffle original sentences to avoid exact repetition patterns
+        const reshuffled = [...originalSentences].sort(() => 0.5 - Math.random());
+        // Add shuffled sentences to our pool
+        filteredSentences.push(...reshuffled);
       }
     }
     
@@ -817,7 +829,7 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
         type={lengthControlType}
         onTypeChange={setLengthControlType}
         min={textType === 'list' ? 3 : 1}
-        max={textType === 'list' ? 10 : textType === 'heading' ? 10 : 30}
+        max={textType === 'list' ? 10 : textType === 'heading' ? 10 : 50}
         step={1}
         labelType={
           textType === 'heading' ? 'words' : 
@@ -825,6 +837,32 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
           'lines'
         }
       />
+      
+      {/* Show paragraph character count when paragraph type is selected and approaching limit */}
+      {textType === 'paragraph' && lengthValue > 30 && (
+        <div className="paragraph-counter" style={{
+          color: lengthValue >= 45 ? '#ef4444' : lengthValue >= 40 ? '#f97316' : '#3b82f6',
+          fontSize: '0.85rem',
+          marginTop: '0.5rem',
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          gap: '0.25rem'
+        }}>
+          <span>
+            {lengthValue >= 45 ? 
+              `${t('approaching')} ${t('maximum')}` : 
+              `${lengthValue} / 50 ${t('lines')}`
+            }
+          </span>
+          {lengthValue >= 45 && (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" 
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+        </div>
+      )}
       
       {/* Only show validation error for lists */}
       {validationError && textType === 'list' && (

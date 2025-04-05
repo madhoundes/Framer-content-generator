@@ -166,7 +166,9 @@ const TextPreview: React.FC<TextPreviewProps> = ({
         <div style={{ 
           width: '600px', 
           maxWidth: '100%',
-          direction: isRtl ? 'rtl' : 'ltr'
+          direction: isRtl ? 'rtl' : 'ltr',
+          // Add smooth scrolling behavior for longer paragraphs
+          scrollBehavior: 'smooth'
         }}>
           {text.split('\n\n').map((paragraph, index) => {
             // Split paragraph into sentences

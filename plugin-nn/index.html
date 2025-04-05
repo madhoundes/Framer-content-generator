@@ -50,48 +50,38 @@
           --length-control-slider-bg: #e5e7eb;
           --length-control-slider-fill: #3b82f6;
           --length-control-slider-border: #d1d5db;
-          
-          /* Scrollbar colors - Light theme */
-          --scrollbar-track: #f1f1f1;
-          --scrollbar-thumb: #c1c1c1;
-          --scrollbar-thumb-hover: #a1a1a1;
         }
 
         :root.dark-theme {
           /* Dark mode variables */
-          --background-color: #1a1a1a;
+          --background-color: #1e1e1e;
           --text-color: #ffffff;
           --secondary-text-color: #a0a0a0;
           --border-color: #333333;
-          --container-bg: #242424;
-          --dropdown-bg: #242424;
-          --dropdown-hover: #333333;
-          --card-bg: #242424;
+          --container-bg: #2c2c2c;
+          --dropdown-bg: #2c2c2c;
+          --dropdown-hover: #3b3b3b;
+          --card-bg: #2c2c2c;
           --card-border: #333333;
-          --icon-color: #e0e0e0;
+          --icon-color: #d4d4d4;
           --toggle-bg: #3b3b3b;
           --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
           --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.25);
-          --logo-bg: #242424;
-          --logo-letter-bg: #1a1a1a;
-          --language-switcher-bg: #333333;
-          --language-switcher-border: #444444;
-          --text-type-selector-bg: #333333;
-          --text-type-selector-border: #444444;
-          --category-dropdown-bg: #333333;
-          --category-dropdown-border: #444444;
-          --text-preview-bg: #333333;
-          --text-preview-border: #444444;
-          --action-buttons-bg: #242424;
-          --action-buttons-border: #333333;
-          --length-control-slider-bg: #333333;
+          --logo-bg: #2c2c2c;
+          --logo-letter-bg: #1e1e1e;
+          --language-switcher-bg: #404040;
+          --language-switcher-border: #525252;
+          --text-type-selector-bg: #404040;
+          --text-type-selector-border: #525252;
+          --category-dropdown-bg: #404040;
+          --category-dropdown-border: #525252;
+          --text-preview-bg: #404040;
+          --text-preview-border: #525252;
+          --action-buttons-bg: #404040;
+          --action-buttons-border: #525252;
+          --length-control-slider-bg: #27272a;
           --length-control-slider-fill: #3b82f6;
-          --length-control-slider-border: #444444;
-          
-          /* Scrollbar colors - Dark theme - Increased contrast */
-          --scrollbar-track: #242424;
-          --scrollbar-thumb: #555555;
-          --scrollbar-thumb-hover: #777777;
+          --length-control-slider-border: #3f3f46;
         }
 
         html {
@@ -206,7 +196,7 @@
         .main-content {
           padding: 1rem;
           flex-grow: 1;
-          padding-bottom: calc(1rem + 68px); /* Added padding for the fixed footer (68px is footer height) */
+          padding-bottom: 1rem; /* Extra padding at the bottom */
           overflow: auto; /* Allow scrolling if needed */
         }
 
@@ -712,18 +702,16 @@
           border-radius: 8px;
           border: 1px solid var(--text-preview-border);
           padding: 16px;
-          height: 12rem; /* Increased height from 10rem to 12rem for longer content */
+          height: 10rem; /* Increased height from 6rem to 10rem */
           overflow-y: auto;
           font-size: 0.875rem;
           box-shadow: var(--shadow-sm);
-          transition: box-shadow 0.3s ease, height 0.3s ease;
+          transition: box-shadow 0.3s ease;
           color: var(--text-color);
-          scroll-behavior: smooth; /* Add smooth scrolling */
         }
 
         .text-preview:focus-within {
           box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-          height: 16rem; /* Expand height when focused for easier reading of long content */
         }
 
         /* Paragraph Length Toggle */
@@ -956,7 +944,7 @@
           direction: ltr;
         }
 
-        /* Action Buttons - Updated based on Framer's design */
+        /* Action Buttons - Updated based on Figma JSON */
         .action-buttons {
           display: flex;
           gap: 12px;
@@ -974,7 +962,6 @@
           margin: 0 auto;
           transition: transform 0.3s ease;
           justify-content: center;
-          box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .action-buttons-inner {
@@ -987,15 +974,15 @@
         .generate-button {
           flex: 1;
           padding: 0.5rem 1rem;
-          background-color: #252525;
+          background-color: #262626;
           color: white;
-          border: 1px solid #444444;
+          border: 1px solid #525252;
           border-radius: 6px;
           font-size: 0.875rem;
           font-weight: 500;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.09);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.09);
           outline: none;
           position: relative;
           overflow: hidden;
@@ -1004,7 +991,6 @@
 
         .generate-button:hover {
           background-color: #333333;
-          border-color: #555555;
         }
 
         .generate-button:active {
@@ -1024,15 +1010,15 @@
         .add-to-canvas-button {
           flex: 1;
           padding: 0.5rem 1rem;
-          background-color: #0055FF;
+          background-color: #3b82f6;
           color: white;
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          border: 1px solid #60a5fa;
           border-radius: 6px;
           font-size: 0.875rem;
           font-weight: 500;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.09);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.09);
           outline: none;
           position: relative;
           overflow: hidden;
@@ -1040,7 +1026,7 @@
         }
 
         .add-to-canvas-button:hover {
-          background-color: #0044CC;
+          background-color: #2563eb;
         }
 
         .add-to-canvas-button:active {
@@ -1099,11 +1085,11 @@
         }
 
         .banner-content {
-          background: rgba(64, 64, 64, 0.8);
-          backdrop-filter: blur(10px);
+          background: rgba(64, 64, 64, 0.7);
+          backdrop-filter: blur(7.199999809265137px);
           border: 1px solid #525252;
           border-radius: 14px;
-          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
           padding: 13px;
           display: flex;
           flex-direction: column;
@@ -1149,7 +1135,7 @@
         .banner-actions {
           display: flex;
           justify-content: space-between;
-          gap: 8px; /* Reduced from 11px to accommodate three buttons */
+          gap: 11px;
           width: 100%;
         }
 
@@ -1169,110 +1155,13 @@
           text-align: center;
         }
 
-        .banner-action-button:hover {
-          opacity: 0.7; /* 30% decrease in opacity on hover */
-        }
-
         .banner-action-button.get-template {
           background-color: #171717;
           color: white;
         }
 
-        /* Updated styling for the hire-me link */
-        .banner-action-label {
-          /* Remove button styling */
-          background-color: transparent;
-          border: none;
-          box-shadow: none;
-          padding: 0px 0; /* Adjust padding for alignment */
-          
-          /* Text styling with slightly reduced opacity */
-          color: rgba(181, 181, 181, 0.85);
-          font-size: 12.8px;
-          font-weight: 500;
-          text-decoration: none;
-          cursor: pointer;
-          
-          /* Layout */
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          position: relative;
-        }
-
-        /* Cursor-like animation keyframes */
-        @keyframes cursorThinking {
-          0% {
-            background-position: -100% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 300% 50%;
-          }
-        }
-
-        /* Animated gradient overlay */
-        .banner-action-label::before {
-          content: attr(data-text);
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          
-          /* Multi-point gradient for a more subtle effect */
-          background-image: linear-gradient(
-            90deg,
-            rgba(181, 181, 181, 0.85) 0%,
-            rgba(181, 181, 181, 0.85) 20%,
-            rgba(255, 255, 255, 1) 35%,
-            rgba(255, 255, 255, 1) 45%,
-            rgba(181, 181, 181, 0.85) 60%,
-            rgba(181, 181, 181, 0.85) 100%
-          );
-          
-          background-size: 300% 100%;
-          background-repeat: no-repeat;
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          
-          /* Cursor-like timing and easing - with no delay between cycles */
-          animation: cursorThinking 3.4s linear infinite;
-          z-index: 1;
-          text-shadow: none;
-          font-weight: 500; /* Match the base font weight */
-        }
-
-        /* Keep animation running during hover */
-        .banner-action-label:hover::before {
-          animation: cursorThinking 3.4s linear infinite;
-        }
-
-        /* Fallback for browsers that don't support background-clip: text */
-        @supports not (background-clip: text) {
-          .banner-action-label {
-            animation: textPulseFallback 3.4s ease infinite;
-          }
-          
-          @keyframes textPulseFallback {
-            0%, 100% { color: #b5b5b5; }
-            50% { color: #ffffff; }
-          }
-        }
-
-        .banner-action-button.hire-me {
-          background-color: #0055FF;
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 7px 12px;
-          border-radius: 8px;
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        .banner-action-button.get-template:hover {
+          background-color: #262626;
         }
 
         .banner-action-button.buy-coffee {
@@ -1284,6 +1173,10 @@
           padding: 7px 12px;
           border-radius: 8px;
           box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .banner-action-button.buy-coffee:hover {
+          background-color: #FFE44D;
         }
 
         .banner-action-button.buy-coffee:active {
@@ -1642,57 +1535,8 @@
         html[dir="rtl"] .category-dropdown-button .icon {
           margin-left: -3px;
         }
-
-        .banner-footer {
-          text-align: center;
-          margin-top: 4px; /* Add some space above the footer link */
-        }
-
-        .banner-actions button:hover {
-          opacity: 0.7!important; /* Decrease opacity by 30% on hover */
-        }
-
-        /* Custom scrollbar styling */
-        ::-webkit-scrollbar {
-          width: 10px;
-          height: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-          background: var(--scrollbar-track);
-          border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-          background: var(--scrollbar-thumb);
-          border-radius: 4px;
-          border: 2px solid var(--scrollbar-track);
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-          background: var(--scrollbar-thumb-hover);
-        }
-
-        /* Firefox scrollbar styling */
-        * {
-          scrollbar-width: thin;
-          scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-        }
-
-        /* Define keyframes for the infinite gradient animation */
-        @keyframes gradientMove {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
       </style>
-      <script type="module" src="/index-Cv2_QpIZ.mjs"></script>
+      <script type="module" src="/index-B52UxSk2.mjs"></script>
       <style rel="stylesheet">.youtube-widget-overlay{position:fixed;inset:0;background-color:#00000080;display:flex;align-items:center;justify-content:center;z-index:9999;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);animation:overlayFadeIn .3s ease-in-out}.youtube-widget-overlay.closing{animation:overlayFadeOut .3s ease-in-out forwards}@keyframes overlayFadeIn{0%{background-color:#0000;-webkit-backdrop-filter:blur(0px);backdrop-filter:blur(0px)}to{background-color:#00000080;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}}@keyframes overlayFadeOut{0%{background-color:#00000080;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}to{background-color:#0000;-webkit-backdrop-filter:blur(0px);backdrop-filter:blur(0px)}}.youtube-widget-container{width:308px;height:352px;background-color:#404040;border-radius:12px;overflow:hidden;box-shadow:0 4px 6px -1px #0000001a,0 2px 4px -1px #0000000f;display:flex;flex-direction:column;animation:fadeIn .3s ease-in-out;border:1px solid rgba(82,82,82,1);transition:width .3s ease,height .3s ease}.youtube-widget-container.playing{width:640px;height:480px}@keyframes fadeIn{0%{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeOut{0%{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-20px)}}.youtube-widget-container.closing{animation:fadeOut .3s ease-in-out forwards}.youtube-widget-header{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid rgba(82,82,82,1)}.youtube-widget-header h2{color:#f5f5f5;font-size:18px;font-weight:600;margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Open Sans,Helvetica Neue,sans-serif}.youtube-widget-close{background:transparent;border:none;cursor:pointer;padding:0;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:background-color .2s;color:#a3a3a3}.youtube-widget-close img{width:17px;height:17px}.youtube-widget-close:hover{background-color:#52525280}.youtube-widget-thumbnail{position:relative;margin:20px 20px 10px;width:calc(100% - 40px);height:210px;cursor:pointer;overflow:hidden;border-radius:16px;background-color:#333}.youtube-thumbnail{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:transform .3s ease}.youtube-widget-thumbnail:hover .youtube-thumbnail{transform:scale(1.05)}.youtube-widget-thumbnail:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,#fff0,#0000004d);pointer-events:none}.youtube-widget-branding{position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:6px;z-index:10}.youtube-widget-branding img{width:34px;height:34px;border-radius:4px}.youtube-widget-branding span{color:#050505;font-weight:500;max-width:183px;line-height:110%}.youtube-play-button{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:transform .2s ease;width:59px;height:41px;display:flex;align-items:center;justify-content:center;z-index:10;filter:drop-shadow(0px 2.071px 3.107px rgba(0,0,0,.15)) drop-shadow(0px 6.213px 6.213px rgba(0,0,0,.13)) drop-shadow(1.036px 14.497px 8.284px rgba(0,0,0,.08)) drop-shadow(1.036px 24.852px 10.355px rgba(0,0,0,.02)) drop-shadow(2.071px 39.349px 11.391px rgba(0,0,0,0))}.youtube-play-button img{width:59px;height:41px}.youtube-widget-thumbnail:hover .youtube-play-button{transform:translate(-50%,-50%) scale(1.1)}.youtube-thumbnail-quality{position:absolute;bottom:10px;right:10px;background-color:#000000b3;color:#fff;padding:4px 8px;border-radius:4px;font-size:12px;font-weight:500;z-index:20}.youtube-widget-footer{padding:8px 21px 18px;margin-top:auto;display:flex;justify-content:flex-start}.youtube-widget-description{display:flex;align-items:flex-start;gap:12px}.book-icon{width:21px;height:21px;flex-shrink:0;margin-top:8px}.youtube-widget-description p{color:#f5f5f5;font-size:14px;line-height:1.5;margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Open Sans,Helvetica Neue,sans-serif}.youtube-widget-dont-show{margin-top:0;display:flex;justify-content:flex-start}.dont-show-label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#c8c8c8;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Open Sans,Helvetica Neue,sans-serif}.dont-show-label input[type=checkbox]{width:16px;height:16px;margin:0;cursor:pointer;accent-color:#3a8fff}.youtube-widget-player{position:relative;width:100%;height:360px;background-color:#000;flex:1;overflow:hidden}.youtube-widget-player iframe{width:100%;height:100%;border:none}.youtube-widget-controls{position:absolute;bottom:15px;left:15px;right:15px;display:flex;justify-content:space-between;z-index:20}.youtube-widget-back-button,.youtube-widget-fullscreen-button{background-color:#000000b3;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;font-size:14px;transition:background-color .2s,transform .1s;display:flex;align-items:center;gap:6px}.youtube-widget-back-button:hover,.youtube-widget-fullscreen-button:hover{background-color:#000000e6;transform:scale(1.05)}@keyframes pulse{0%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.8}to{transform:scale(1);opacity:1}}.youtube-widget-fullscreen-button{animation:pulse 2s infinite}
 </style>
     </head>
@@ -1704,43 +1548,14 @@
         document.addEventListener('DOMContentLoaded', function() {
           // Check if the page is loaded within Framer
           if (window.self !== window.top) {
-            // Check for Framer theme using the data-framer-theme attribute
-            const detectFramerTheme = () => {
-              try {
-                // Try to access parent document to check Framer's theme
-                if (window.parent && window.parent.document.documentElement.getAttribute('data-framer-theme') === 'dark') {
-                  document.documentElement.classList.add('dark-theme');
-                  localStorage.setItem('theme', 'dark');
-                } else {
-                  document.documentElement.classList.remove('dark-theme');
-                  localStorage.setItem('theme', 'light');
-                }
-              } catch (e) {
-                // Fallback to using prefers-color-scheme if we can't access parent
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if (prefersDark) {
-                  document.documentElement.classList.add('dark-theme');
-                  localStorage.setItem('theme', 'dark');
-                } else {
-                  document.documentElement.classList.remove('dark-theme');
-                  localStorage.setItem('theme', 'light');
-                }
-              }
-            }
-            
-            // Initial detection
-            detectFramerTheme();
-            
-            // Set up an observer to detect theme changes in Framer
-            const themeObserver = new MutationObserver(detectFramerTheme);
-            try {
-              themeObserver.observe(window.parent.document.documentElement, {
-                attributes: true,
-                attributeFilter: ['data-framer-theme']
-              });
-            } catch (e) {
-              // If we can't access parent for observation, set up media query listener as fallback
-              window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', detectFramerTheme);
+            // Use prefers-color-scheme to detect Framer's theme setting
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+              document.documentElement.classList.add('dark-theme');
+              localStorage.setItem('theme', 'dark');
+            } else {
+              document.documentElement.classList.remove('dark-theme');
+              localStorage.setItem('theme', 'light');
             }
           }
         });

@@ -25,6 +25,7 @@
     "title": "هل لديك فكرة؟",
     "description": "حقق رؤيتك من خلال خدماتنا المخصصة للعمل الحر والمصممة لتلبية احتياجاتك.",
     "getTemplate": "وظفني",
+    "hireMe": "قم بترقية موقعك واحصل على خصم 50%",
     "buyMeCoffee": "تبرع لي"
   },
   "navigation": {
@@ -73,6 +74,9 @@
   "lineCount": "عدد الأسطر",
   "characterCount": "عدد الأحرف",
   "itemCount": "عدد العناصر",
+  "approaching": "يقترب من",
+  "maximum": "الحد الأقصى",
+  "exceededLimitError": "يتجاوز النص الحد الأقصى 50 سطرًا. يرجى تقليل الطول.",
   "categories": {
     "technology": "التكنولوجيا",
     "business": "الأعمال",
