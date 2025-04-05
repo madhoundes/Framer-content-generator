@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "pack": "npx framer-plugin-tools@latest pack"
+    "pack": "npx framer-plugin-tools@latest pack",
+    "clean": "rm -rf .DS_Store **/.DS_Store"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.6",

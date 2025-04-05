@@ -3,10 +3,6 @@ node_modules
 .pnp
 .pnp.js
 
-# Production
-/dist
-/build
-
 # Testing
 /coverage
 
@@ -41,7 +37,7 @@ logs
 *.log
 
 # Plugin specific
-*.zip
+plugin-nn/
 prompts/
 screenshots/
 *-marketplace/
@@ -49,9 +45,16 @@ screenshots/
 *-submission/
 banner-component/
 temp/
+
+# Allow dist for production builds
+# /dist
+# /build
+
+# Only allow specific images
 *.jpg
 *.png
 !public/**/*.png
 !public/**/*.jpg
 !src/**/*.png
-!src/**/*.jpg 
+!src/**/*.jpg
+!Cover-nwq.jpg 
