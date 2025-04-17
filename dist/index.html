@@ -1705,76 +1705,182 @@
           // Log initial plugin load
           console.log('Framer Text Generator plugin loaded.');
           
-          // Check if the page is loaded within Framer
-          if (window.self !== window.top) {
-            // Check for Framer theme using the data-framer-theme attribute
-            const detectFramerTheme = () => {
-              try {
-                // Try to access parent document to check Framer's theme
-                if (window.parent && window.parent.document.documentElement) {
+          // Theme setting function - applies the theme to the document
+          const applyTheme = (isDark) => {
+            if (isDark) {
+              document.documentElement.classList.add('dark-theme');
+              localStorage.setItem('theme', 'dark');
+              console.log('Plugin theme set to: dark');
+            } else {
+              document.documentElement.classList.remove('dark-theme');
+              localStorage.setItem('theme', 'light');
+              console.log('Plugin theme set to: light');
+            }
+          };
+
+          // Check if we're running in an iframe (inside Framer)
+          const isInIframe = window.self !== window.top;
+          
+          if (isInIframe) {
+            // APPROACH 1: Try direct parent access (works in desktop app)
+            try {
+              const detectFramerThemeDirectly = () => {
+                if (window.parent && window.parent.document) {
                   const framerTheme = window.parent.document.documentElement.getAttribute('data-framer-theme');
-                  
-                  if (framerTheme === 'dark') {
-                    document.documentElement.classList.add('dark-theme');
-                    localStorage.setItem('theme', 'dark');
-                    console.log('Plugin theme adapted to Framer\'s theme: dark');
-                  } else {
-                    document.documentElement.classList.remove('dark-theme');
-                    localStorage.setItem('theme', 'light');
-                    console.log('Plugin theme adapted to Framer\'s theme: light');
-                  }
+                  applyTheme(framerTheme === 'dark');
                 }
-              } catch (e) {
-                console.warn('Could not access parent frame for theme detection:', e.message);
+              };
+              
+              // Try direct detection first
+              detectFramerThemeDirectly();
+              
+              // Try to set up an observer (works in desktop app)
+              try {
+                const themeObserver = new MutationObserver(() => {
+                  console.log('Framer theme change detected via observer');
+                  detectFramerThemeDirectly();
+                });
                 
-                // Fallback to using prefers-color-scheme if we can't access parent
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if (prefersDark) {
-                  document.documentElement.classList.add('dark-theme');
-                  localStorage.setItem('theme', 'dark');
-                  console.log('Plugin theme using OS preference (fallback): dark');
-                } else {
-                  document.documentElement.classList.remove('dark-theme');
-                  localStorage.setItem('theme', 'light');
-                  console.log('Plugin theme using OS preference (fallback): light');
-                }
+                themeObserver.observe(window.parent.document.documentElement, {
+                  attributes: true,
+                  attributeFilter: ['data-framer-theme']
+                });
+                console.log('Theme observer connected to Framer');
+              } catch (observerError) {
+                console.warn('Could not set up direct observer:', observerError.message);
               }
+            } catch (directAccessError) {
+              console.warn('Direct parent access failed:', directAccessError.message);
             }
             
-            // Initial detection
-            detectFramerTheme();
-            
-            // Set up an observer to detect theme changes in Framer
-            const themeObserver = new MutationObserver((mutations) => {
-              console.log('Framer theme change detected');
-              detectFramerTheme();
-            });
-            
+            // APPROACH 2: Message-based communication (works in web client)
+            // Send a message to the parent asking for the current theme
             try {
-              themeObserver.observe(window.parent.document.documentElement, {
-                attributes: true,
-                attributeFilter: ['data-framer-theme']
-              });
-              console.log('Theme observer connected to Framer');
-            } catch (e) {
-              console.warn('Could not observe Framer theme changes:', e.message);
+              // Function to request theme from parent
+              const requestThemeFromParent = () => {
+                console.log('Requesting theme from parent frame');
+                window.parent.postMessage({ type: 'REQUEST_THEME' }, '*');
+              };
               
-              // If we can't access parent for observation, set up media query listener as fallback
-              const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-              mediaQuery.addEventListener('change', () => {
-                console.log('OS theme preference changed (fallback)');
-                detectFramerTheme();
+              // Request the theme initially
+              requestThemeFromParent();
+              
+              // Set up periodic polling as a fallback (every 2 seconds)
+              const pollInterval = setInterval(requestThemeFromParent, 2000);
+              
+              // Listen for theme messages from the parent frame
+              window.addEventListener('message', (event) => {
+                // Only process messages with the expected format
+                if (event.data && event.data.type === 'THEME_RESPONSE') {
+                  console.log('Received theme from parent:', event.data.isDark ? 'dark' : 'light');
+                  applyTheme(event.data.isDark);
+                  
+                  // If we received at least one response, we can reduce polling frequency
+                  clearInterval(pollInterval);
+                  // Poll less frequently once we've established communication
+                  setInterval(requestThemeFromParent, 5000);
+                }
               });
-              console.log('Using OS theme preference as fallback');
+            } catch (messagingError) {
+              console.warn('Message-based theme detection failed:', messagingError.message);
+            }
+            
+            // APPROACH 3: Fallback to OS preference if all else fails
+            try {
+              const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+              const handleMediaChange = () => {
+                const prefersDark = mediaQuery.matches;
+                console.log('Using OS theme preference as fallback:', prefersDark ? 'dark' : 'light');
+                applyTheme(prefersDark);
+              };
+              
+              // Set initial theme based on OS preference
+              handleMediaChange();
+              
+              // Listen for changes to OS theme preference
+              mediaQuery.addEventListener('change', handleMediaChange);
+            } catch (mediaQueryError) {
+              console.warn('Media query fallback failed:', mediaQueryError.message);
+              // Ultimate fallback - just use light theme
+              applyTheme(false);
             }
           } else {
             console.log('Plugin running in standalone mode (not within Framer)');
             
-            // Add simple theme toggle for standalone mode testing
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (prefersDark) {
-              document.documentElement.classList.add('dark-theme');
+            // For standalone testing, respect OS preference
+            try {
+              const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              applyTheme(prefersDark);
+              
+              // Add a manual toggle option for testing
+              const toggleButton = document.createElement('button');
+              toggleButton.textContent = 'Toggle Theme';
+              toggleButton.style.position = 'fixed';
+              toggleButton.style.bottom = '10px';
+              toggleButton.style.right = '10px';
+              toggleButton.style.zIndex = '9999';
+              toggleButton.addEventListener('click', () => {
+                const isDarkNow = document.documentElement.classList.contains('dark-theme');
+                applyTheme(!isDarkNow);
+              });
+              document.body.appendChild(toggleButton);
+            } catch (e) {
+              console.warn('Standalone mode theme setup failed:', e.message);
             }
+          }
+          
+          // Insert script to handle theme detection in the parent (Framer web)
+          // This script will run in the Framer context and relay theme information
+          try {
+            if (isInIframe) {
+              const script = document.createElement('script');
+              script.textContent = `
+                // This runs in the parent (Framer context)
+                window.addEventListener('message', function(event) {
+                  // Only respond to our plugin's requests
+                  if (event.data && event.data.type === 'REQUEST_THEME') {
+                    try {
+                      const isDark = document.documentElement.getAttribute('data-framer-theme') === 'dark';
+                      event.source.postMessage({
+                        type: 'THEME_RESPONSE',
+                        isDark: isDark
+                      }, '*');
+                    } catch(e) {
+                      console.warn('Error in Framer theme detection helper:', e);
+                    }
+                  }
+                });
+                
+                // Watch for theme changes and notify plugin
+                const themeObserver = new MutationObserver(function(mutations) {
+                  const isDark = document.documentElement.getAttribute('data-framer-theme') === 'dark';
+                  // Send to all potential child frames
+                  const frames = document.querySelectorAll('iframe');
+                  frames.forEach(function(frame) {
+                    try {
+                      frame.contentWindow.postMessage({
+                        type: 'THEME_RESPONSE',
+                        isDark: isDark
+                      }, '*');
+                    } catch(e) {}
+                  });
+                });
+                
+                // Start observing
+                try {
+                  themeObserver.observe(document.documentElement, {
+                    attributes: true,
+                    attributeFilter: ['data-framer-theme']
+                  });
+                } catch(e) {}
+              `;
+              
+              // Append to document to attempt injection into parent
+              // This is a creative approach - it may succeed in some contexts
+              document.head.appendChild(script);
+            }
+          } catch (e) {
+            console.warn('Helper script injection failed:', e.message);
           }
         });
       </script>
