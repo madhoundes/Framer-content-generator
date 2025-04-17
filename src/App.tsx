@@ -259,67 +259,61 @@ function AppContent() {
             // Apply style options to the text node after creation
             if (textNode && textNode.id) {
                 try {
+                    // Define a default max width
+                    const MAX_WIDTH = 650;
+                    
                     // Create attributes object with fixed width properties
                     const attributes: any = {
-                        width: MAX_WIDTH,
-                        // Set fixed width mode - don't auto-fit
-                        textAutoResize: 'HEIGHT',
-                        // Ensure max width is enforced
-                        maxWidth: MAX_WIDTH,
+                        width: MAX_WIDTH, // Set a fixed width initially
+                        maxWidth: MAX_WIDTH, // Enforce the maximum width
+                        textAutoResize: 'HEIGHT', // Allow height to adjust, fix width
                         // Set consistent line height for all text types
                         lineHeight: styleOptions && styleOptions.lineHeight ? styleOptions.lineHeight : 1.5
                     };
                     
                     // Add RTL properties if needed
                     if (isRtl) {
-                        // Strong right alignment for RTL text
                         attributes.textAlign = 'right';
                         attributes.direction = 'rtl';
-                        // Set the writing direction to RTL for proper text rendering
                         attributes.textDirection = 'RTL';
-                        
-                        // Try all possible Framer properties that might control alignment
-                        // Some of these might not work, but we're trying everything to ensure
-                        // right alignment in the Framer Canvas UI
                         attributes.textAlignHorizontal = 'right';
                         attributes.horizontalAlignment = 'right';
                         attributes.alignment = 'right';
                         attributes.paragraphAlignment = 'right';
                         attributes.paragraphAlignHorizontal = 'right';
-                        attributes.textAlignVertical = 'top'; // Ensure vertical alignment is top
+                        attributes.textAlignVertical = 'top';
                         
-                        // Special handling for lists
+                        // Special handling for lists (ensure maxWidth is still applied)
                         if (styleOptions && styleOptions.listFormat === 'rtl') {
                             attributes.paragraphIndent = 20;
                             attributes.paragraphSpacing = 10;
                             attributes.listStyle = 'rtl';
-                            // Fix for inverted numbering in RTL lists
                             attributes.listReversed = false;
                             attributes.listStylePosition = 'outside';
-                            // Explicitly set the list direction for ordered lists
                             attributes.listDirection = 'rtl';
-                            // Set right margin for list items
                             attributes.listMarginRight = 20;
-                            // Add extra support for RTL list numbering
                             attributes.listNumberingReversed = false;
                             attributes.listStyleType = 'decimal-rtl';
                             attributes.listStyleTypeRtl = true;
                             attributes.textRtl = true;
-                            // Apply other RTL-specific attributes from styleOptions
                             if (styleOptions.listStyle) {
                                 attributes.listStyle = styleOptions.listStyle;
                             }
-                        } else {
-                            // For English lists, ensure proper formatting
-                            if (styleOptions && styleOptions.listFormat) {
-                                attributes.paragraphIndent = 20;
-                                attributes.paragraphSpacing = 10;
-                            }
+                        } else if (styleOptions && styleOptions.listFormat) {
+                            // English lists still need paragraph settings
+                            attributes.paragraphIndent = 20;
+                            attributes.paragraphSpacing = 10;
                         }
+                    } else {
+                        // Ensure English lists get indentation too
+                         if (styleOptions && styleOptions.listFormat) {
+                            attributes.paragraphIndent = 20;
+                            attributes.paragraphSpacing = 10;
+                         }
                     }
                     
                     // Apply the attributes
-                    console.log("Applying attributes:", attributes);
+                    console.log("Applying attributes with max width:", attributes);
                     await framer.setAttributes(textNode.id, attributes);
                     
                 } catch (styleError) {
