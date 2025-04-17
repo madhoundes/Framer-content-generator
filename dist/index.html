@@ -1753,57 +1753,80 @@
               console.warn('Direct parent access failed:', directAccessError.message);
             }
             
-            // APPROACH 2: Message-based communication (works in web client)
-            // Send a message to the parent asking for the current theme
-            try {
-              // Function to request theme from parent
-              const requestThemeFromParent = () => {
-                console.log('Requesting theme from parent frame');
-                window.parent.postMessage({ type: 'REQUEST_THEME' }, '*');
-              };
-              
-              // Request the theme initially
-              requestThemeFromParent();
-              
-              // Set up periodic polling as a fallback (every 2 seconds)
-              const pollInterval = setInterval(requestThemeFromParent, 2000);
-              
-              // Listen for theme messages from the parent frame
-              window.addEventListener('message', (event) => {
-                // Only process messages with the expected format
-                if (event.data && event.data.type === 'THEME_RESPONSE') {
-                  console.log('Received theme from parent:', event.data.isDark ? 'dark' : 'light');
-                  applyTheme(event.data.isDark);
+            // APPROACH 2: Visual CSS-based theme detection (works in web client)
+            // Instead of message passing which causes errors, detect theme visually
+            const detectThemeVisually = () => {
+              try {
+                // Create a hidden probe element
+                const probe = document.createElement('div');
+                probe.style.position = 'absolute';
+                probe.style.width = '1px';
+                probe.style.height = '1px';
+                probe.style.opacity = '0.01';
+                probe.style.pointerEvents = 'none';
+                
+                // The probe will inherit Framer's theme-based background color
+                probe.style.backgroundColor = 'var(--color-background)';
+                document.body.appendChild(probe);
+                
+                // Get the computed style
+                const computedStyle = window.getComputedStyle(probe);
+                const bgColor = computedStyle.backgroundColor;
+                
+                // Analyze the brightness of the background color
+                // Dark themes typically have darker backgrounds
+                const rgb = bgColor.match(/\d+/g).map(Number);
+                if (rgb && rgb.length === 3) {
+                  // Calculate perceived brightness (ITU-R BT.709)
+                  const brightness = (rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722) / 255;
+                  const isDark = brightness < 0.5;
                   
-                  // If we received at least one response, we can reduce polling frequency
-                  clearInterval(pollInterval);
-                  // Poll less frequently once we've established communication
-                  setInterval(requestThemeFromParent, 5000);
+                  console.log('Visually detected theme brightness:', brightness.toFixed(2), isDark ? '(dark)' : '(light)');
+                  applyTheme(isDark);
                 }
-              });
-            } catch (messagingError) {
-              console.warn('Message-based theme detection failed:', messagingError.message);
+                
+                // Clean up
+                document.body.removeChild(probe);
+                
+                return true;
+              } catch (e) {
+                console.warn('Visual theme detection failed:', e.message);
+                return false;
+              }
+            };
+            
+            // Try the visual detection
+            const visualDetectionSucceeded = detectThemeVisually();
+            
+            // Set up a periodic check for theme changes (using visual detection)
+            // This is more reliable in web context than postMessage
+            if (visualDetectionSucceeded) {
+              console.log('Using visual theme detection for web client');
+              setInterval(detectThemeVisually, 2000);
             }
             
             // APPROACH 3: Fallback to OS preference if all else fails
             try {
-              const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-              const handleMediaChange = () => {
-                const prefersDark = mediaQuery.matches;
-                console.log('Using OS theme preference as fallback:', prefersDark ? 'dark' : 'light');
-                applyTheme(prefersDark);
-              };
-              
-              // Set initial theme based on OS preference
-              handleMediaChange();
-              
-              // Listen for changes to OS theme preference
-              mediaQuery.addEventListener('change', handleMediaChange);
+              if (!visualDetectionSucceeded) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const handleMediaChange = () => {
+                  const prefersDark = mediaQuery.matches;
+                  console.log('Using OS preference as fallback:', prefersDark ? 'dark' : 'light');
+                  applyTheme(prefersDark);
+                };
+                
+                // Set initial theme based on OS preference
+                handleMediaChange();
+                
+                // Listen for changes to OS theme preference
+                mediaQuery.addEventListener('change', handleMediaChange);
+              }
             } catch (mediaQueryError) {
               console.warn('Media query fallback failed:', mediaQueryError.message);
               // Ultimate fallback - just use light theme
               applyTheme(false);
             }
+            
           } else {
             console.log('Plugin running in standalone mode (not within Framer)');
             
@@ -1827,60 +1850,6 @@
             } catch (e) {
               console.warn('Standalone mode theme setup failed:', e.message);
             }
-          }
-          
-          // Insert script to handle theme detection in the parent (Framer web)
-          // This script will run in the Framer context and relay theme information
-          try {
-            if (isInIframe) {
-              const script = document.createElement('script');
-              script.textContent = `
-                // This runs in the parent (Framer context)
-                window.addEventListener('message', function(event) {
-                  // Only respond to our plugin's requests
-                  if (event.data && event.data.type === 'REQUEST_THEME') {
-                    try {
-                      const isDark = document.documentElement.getAttribute('data-framer-theme') === 'dark';
-                      event.source.postMessage({
-                        type: 'THEME_RESPONSE',
-                        isDark: isDark
-                      }, '*');
-                    } catch(e) {
-                      console.warn('Error in Framer theme detection helper:', e);
-                    }
-                  }
-                });
-                
-                // Watch for theme changes and notify plugin
-                const themeObserver = new MutationObserver(function(mutations) {
-                  const isDark = document.documentElement.getAttribute('data-framer-theme') === 'dark';
-                  // Send to all potential child frames
-                  const frames = document.querySelectorAll('iframe');
-                  frames.forEach(function(frame) {
-                    try {
-                      frame.contentWindow.postMessage({
-                        type: 'THEME_RESPONSE',
-                        isDark: isDark
-                      }, '*');
-                    } catch(e) {}
-                  });
-                });
-                
-                // Start observing
-                try {
-                  themeObserver.observe(document.documentElement, {
-                    attributes: true,
-                    attributeFilter: ['data-framer-theme']
-                  });
-                } catch(e) {}
-              `;
-              
-              // Append to document to attempt injection into parent
-              // This is a creative approach - it may succeed in some contexts
-              document.head.appendChild(script);
-            }
-          } catch (e) {
-            console.warn('Helper script injection failed:', e.message);
           }
         });
       </script>
