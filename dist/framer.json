@@ -1,9 +1,22 @@
 {
   "id": "49c777",
   "name": "Framer Text Generator",
+  "displayName": "Framer Text Generator",
   "description": "Generate text content for your Framer projects with support for English and Arabic languages.",
+  "author": {
+    "name": "Ahmed Almadhoun",
+    "email": "madhoundes@gmail.com",
+    "url": "https://www.framer.com/@ahmed-almadhoun/"
+  },
   "modes": [
     "canvas"
   ],
-  "icon": "/icon.svg"
+  "main": "index-Cv2_QpIZ.mjs",
+  "preview": "index.html",
+  "icon": "icon.svg",
+  "thumbnail": "icon.svg",
+  "version": "1.0.0",
+  "pluginType": "ui",
+  "type": "plugin",
+  "license": "MIT"
 }

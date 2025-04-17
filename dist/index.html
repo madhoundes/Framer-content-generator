@@ -1702,28 +1702,41 @@
       <script>
         // Initialize theme based on Framer's theme setting
         document.addEventListener('DOMContentLoaded', function() {
+          // Log initial plugin load
+          console.log('Framer Text Generator plugin loaded.');
+          
           // Check if the page is loaded within Framer
           if (window.self !== window.top) {
             // Check for Framer theme using the data-framer-theme attribute
             const detectFramerTheme = () => {
               try {
                 // Try to access parent document to check Framer's theme
-                if (window.parent && window.parent.document.documentElement.getAttribute('data-framer-theme') === 'dark') {
-                  document.documentElement.classList.add('dark-theme');
-                  localStorage.setItem('theme', 'dark');
-                } else {
-                  document.documentElement.classList.remove('dark-theme');
-                  localStorage.setItem('theme', 'light');
+                if (window.parent && window.parent.document.documentElement) {
+                  const framerTheme = window.parent.document.documentElement.getAttribute('data-framer-theme');
+                  
+                  if (framerTheme === 'dark') {
+                    document.documentElement.classList.add('dark-theme');
+                    localStorage.setItem('theme', 'dark');
+                    console.log('Plugin theme adapted to Framer\'s theme: dark');
+                  } else {
+                    document.documentElement.classList.remove('dark-theme');
+                    localStorage.setItem('theme', 'light');
+                    console.log('Plugin theme adapted to Framer\'s theme: light');
+                  }
                 }
               } catch (e) {
+                console.warn('Could not access parent frame for theme detection:', e.message);
+                
                 // Fallback to using prefers-color-scheme if we can't access parent
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 if (prefersDark) {
                   document.documentElement.classList.add('dark-theme');
                   localStorage.setItem('theme', 'dark');
+                  console.log('Plugin theme using OS preference (fallback): dark');
                 } else {
                   document.documentElement.classList.remove('dark-theme');
                   localStorage.setItem('theme', 'light');
+                  console.log('Plugin theme using OS preference (fallback): light');
                 }
               }
             }
@@ -1732,15 +1745,35 @@
             detectFramerTheme();
             
             // Set up an observer to detect theme changes in Framer
-            const themeObserver = new MutationObserver(detectFramerTheme);
+            const themeObserver = new MutationObserver((mutations) => {
+              console.log('Framer theme change detected');
+              detectFramerTheme();
+            });
+            
             try {
               themeObserver.observe(window.parent.document.documentElement, {
                 attributes: true,
                 attributeFilter: ['data-framer-theme']
               });
+              console.log('Theme observer connected to Framer');
             } catch (e) {
+              console.warn('Could not observe Framer theme changes:', e.message);
+              
               // If we can't access parent for observation, set up media query listener as fallback
-              window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', detectFramerTheme);
+              const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+              mediaQuery.addEventListener('change', () => {
+                console.log('OS theme preference changed (fallback)');
+                detectFramerTheme();
+              });
+              console.log('Using OS theme preference as fallback');
+            }
+          } else {
+            console.log('Plugin running in standalone mode (not within Framer)');
+            
+            // Add simple theme toggle for standalone mode testing
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+              document.documentElement.classList.add('dark-theme');
             }
           }
         });
