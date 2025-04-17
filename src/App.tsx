@@ -1,5 +1,5 @@
 import { framer, CanvasNode } from "framer-plugin"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import { useTranslation } from 'react-i18next'
 import Header from './components/Header'
 import TextGenerator from './components/TextGenerator'
@@ -77,18 +77,19 @@ try {
   framer.showUI({
     position: "center",
     width: 320, 
-    height: 800,
+    minHeight: 746,
+    resizable: false,
   });
   console.log("Framer UI initialized successfully");
 } catch (error) {
-  console.error("Failed to initialize UI:", error);
-  // Fallback to basic configuration
+  console.error("Error initializing Framer UI:", error);
+  // Fallback to default showUI if specific options fail
   try {
     console.log("Attempting fallback UI initialization");
     framer.showUI();
     console.log("Fallback UI initialization succeeded");
   } catch (innerError) {
-    console.error("Critical UI initialization failure:", innerError);
+    console.error("Fallback UI initialization failed:", innerError);
   }
 }
 
@@ -102,71 +103,87 @@ function useSelection() {
     return selection
 }
 
-// Theme management hook
+// Define the type for the theme explicitly
+type Theme = 'light' | 'dark';
+
+// Custom hook using visual detection
 function useTheme() {
-    const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
-    
-    useEffect(() => {
-        // Check for saved theme preference
-        const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-        if (savedTheme) {
-            setTheme(savedTheme);
-            applyTheme(savedTheme);
-        } else {
-            // Check system preference
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const systemTheme = prefersDark ? 'dark' : 'light';
-            applyTheme(systemTheme);
-        }
-        
-        // Add listener for system preference changes
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        const handleChange = (e: MediaQueryListEvent) => {
-            if (theme === 'system') {
-                applyTheme(e.matches ? 'dark' : 'light');
-            }
-        };
-        
-        // Add listener for Framer theme toggle changes
-        const handleFramerThemeChange = () => {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const newTheme = prefersDark ? 'dark' : 'light';
-            setTheme(newTheme);
-            localStorage.setItem('theme', newTheme);
-            applyTheme(newTheme);
-        };
-        
-        mediaQuery.addEventListener('change', handleChange);
-        // Listen for changes in prefers-color-scheme to detect Framer theme toggle
-        mediaQuery.addEventListener('change', handleFramerThemeChange);
-        
-        return () => {
-            mediaQuery.removeEventListener('change', handleChange);
-            mediaQuery.removeEventListener('change', handleFramerThemeChange);
-        };
-    }, [theme]);
-    
-    const applyTheme = (newTheme: 'light' | 'dark' | 'system') => {
-        const root = document.documentElement;
-        const resolvedTheme = newTheme === 'system'
-            ? window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-            : newTheme;
-            
-        if (resolvedTheme === 'dark') {
-            root.classList.add('dark-theme');
-        } else {
-            root.classList.remove('dark-theme');
-        }
+  const [theme, setTheme] = useState<Theme>('light');
+  const requestRef = useRef<number>();
+  const previousThemeRef = useRef<Theme>('light');
+
+  const detectThemeVisually = useCallback(() => {
+    try {
+      // Check if running inside Framer iframe
+      if (window.self === window.top) {
+          // Standalone mode: Use OS preference
+          const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+          const currentTheme = mediaQuery.matches ? 'dark' : 'light';
+          if (currentTheme !== previousThemeRef.current) {
+              setTheme(currentTheme);
+              document.documentElement.classList.toggle('dark-theme', currentTheme === 'dark');
+              console.log('Standalone theme set to:', currentTheme);
+              previousThemeRef.current = currentTheme;
+          }
+          return; // Exit if not in iframe
+      }
+      
+      // --- Visual Detection Logic (inside iframe) ---
+      const probe = document.createElement('div');
+      probe.style.position = 'absolute';
+      probe.style.width = '1px';
+      probe.style.height = '1px';
+      probe.style.opacity = '0'; // Make it truly invisible
+      probe.style.pointerEvents = 'none';
+      // Try a potentially inherited Framer variable (adjust if needed)
+      probe.style.color = 'var(--framer-color-text, #000000)'; 
+      document.body.appendChild(probe);
+      
+      const computedStyle = window.getComputedStyle(probe);
+      const textColor = computedStyle.color;
+      document.body.removeChild(probe); // Clean up immediately
+
+      // Basic check: Framer dark theme typically uses lighter text
+      // Analyze brightness (simple RGB check might suffice)
+      const rgbMatch = textColor.match(/\((\d+),\s*(\d+),\s*(\d+)/);
+      let currentTheme: Theme = 'light'; // Default to light
+      if (rgbMatch) {
+        const r = parseInt(rgbMatch[1], 10);
+        const g = parseInt(rgbMatch[2], 10);
+        const b = parseInt(rgbMatch[3], 10);
+        // Simple brightness heuristic: average RGB value > 128 means light text (dark mode)
+        const brightness = (r + g + b) / 3;
+        currentTheme = brightness > 128 ? 'dark' : 'light';
+      }
+
+      // Only update state and DOM if theme actually changed
+      if (currentTheme !== previousThemeRef.current) {
+        setTheme(currentTheme);
+        // Use toggle for cleaner class management
+        document.documentElement.classList.toggle('dark-theme', currentTheme === 'dark'); 
+        console.log('Visually detected theme changed to:', currentTheme);
+        previousThemeRef.current = currentTheme;
+      }
+    } catch (e) {
+      console.warn('Visual theme detection failed:', e);
+      // Optionally fallback to OS preference here if needed
+    }
+    // Continue polling
+    requestRef.current = requestAnimationFrame(detectThemeVisually);
+  }, []); // Empty dependency array ensures stable function reference
+
+  useEffect(() => {
+    // Start the animation frame loop
+    requestRef.current = requestAnimationFrame(detectThemeVisually);
+    // Cleanup function to cancel the loop when component unmounts
+    return () => {
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
     };
-    
-    const toggleTheme = () => {
-        const newTheme = theme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-        localStorage.setItem('theme', newTheme);
-        applyTheme(newTheme);
-    };
-    
-    return { theme, toggleTheme };
+  }, [detectThemeVisually]); // Rerun effect if detection logic changes (it won't here)
+
+  return { theme };
 }
 
 function AppContent() {
@@ -176,6 +193,7 @@ function AppContent() {
     const [showBanner, setShowBanner] = useState(true)
     const [loading, setLoading] = useState(true)
     const [showYouTubeWidget, setShowYouTubeWidget] = useState(true)
+    const { theme } = useTheme()
 
     // Force showing YouTube widget regardless of previous visits
     useEffect(() => {
@@ -199,9 +217,6 @@ function AppContent() {
             i18n.off('languageChanged', handleLanguageChange)
         }
     }, [i18n])
-
-    // Initialize theme functionality without exposing in component
-    useTheme();
 
     // Set app ready state after a short delay to ensure everything is loaded
     useEffect(() => {
