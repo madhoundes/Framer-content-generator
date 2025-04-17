@@ -154,7 +154,7 @@ function useTheme() {
     // Start the animation frame loop
     requestRef.current = requestAnimationFrame(detectThemeVisually);
     // Cleanup function to cancel the loop when component unmounts
-    return () => {
+        return () => {
       if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);
       }
@@ -229,15 +229,14 @@ function AppContent() {
             // Check if we're in RTL mode
             const isRtl = styleOptions && styleOptions.direction === 'rtl';
             
-            // Enforce maximum width of 650px
-            const MAX_WIDTH = 650;
+            // --- Define Maximum Width --- 
+            const MAX_WIDTH = 650; // Set a maximum width for the text layer
             
-            // Estimate number of lines
+            // Estimate number of lines (using the defined MAX_WIDTH)
             const estimatedLines = estimateLines(text, MAX_WIDTH);
             
             // Show warning for very long content
             if (estimatedLines > 10) {
-                // Force a new toast by adding a timestamp to the message
                 showToast({
                     message: t('longContentWarning'),
                     type: 'warning',
@@ -246,86 +245,73 @@ function AppContent() {
                 console.log("Showing long content warning toast");
             }
             
-            // Add text to canvas - use the basic method first to ensure it works
+            // Add text to canvas
             const textNode: any = await framer.addText(text);
             
-            if (!textNode) {
-                console.error("Failed to create text node");
+            if (!textNode || !textNode.id) {
+                console.error("Failed to create text node or node ID is missing");
+                showToast({ message: t('errorAddingText'), type: 'error' });
                 return;
             }
             
             console.log("Text node created:", textNode.id);
             
-            // Apply style options to the text node after creation
-            if (textNode && textNode.id) {
-                try {
-                    // Define a default max width
-                    const MAX_WIDTH = 650;
+            // Apply style options and width constraint
+            try {
+                // Create attributes object with fixed width and auto-height
+                const attributes: any = {
+                    width: MAX_WIDTH,
+                    textAutoResize: 'HEIGHT', // Allow height to adjust based on content
+                    maxWidth: MAX_WIDTH,     // Ensure max width is enforced
+                    lineHeight: styleOptions?.lineHeight || 1.5 // Consistent line height
+                };
+                
+                // Add RTL properties if needed
+                if (isRtl) {
+                    attributes.textAlign = 'right';
+                    attributes.direction = 'rtl';
+                    attributes.textDirection = 'RTL';
+                    attributes.textAlignHorizontal = 'right';
+                    attributes.horizontalAlignment = 'right';
+                    attributes.alignment = 'right';
+                    attributes.paragraphAlignment = 'right';
+                    attributes.paragraphAlignHorizontal = 'right';
+                    attributes.textAlignVertical = 'top';
                     
-                    // Create attributes object with fixed width properties
-                    const attributes: any = {
-                        width: MAX_WIDTH, // Set a fixed width initially
-                        maxWidth: MAX_WIDTH, // Enforce the maximum width
-                        textAutoResize: 'HEIGHT', // Allow height to adjust, fix width
-                        // Set consistent line height for all text types
-                        lineHeight: styleOptions && styleOptions.lineHeight ? styleOptions.lineHeight : 1.5
-                    };
-                    
-                    // Add RTL properties if needed
-                    if (isRtl) {
-                        attributes.textAlign = 'right';
-                        attributes.direction = 'rtl';
-                        attributes.textDirection = 'RTL';
-                        attributes.textAlignHorizontal = 'right';
-                        attributes.horizontalAlignment = 'right';
-                        attributes.alignment = 'right';
-                        attributes.paragraphAlignment = 'right';
-                        attributes.paragraphAlignHorizontal = 'right';
-                        attributes.textAlignVertical = 'top';
-                        
-                        // Special handling for lists (ensure maxWidth is still applied)
-                        if (styleOptions && styleOptions.listFormat === 'rtl') {
-                            attributes.paragraphIndent = 20;
-                            attributes.paragraphSpacing = 10;
-                            attributes.listStyle = 'rtl';
-                            attributes.listReversed = false;
-                            attributes.listStylePosition = 'outside';
-                            attributes.listDirection = 'rtl';
-                            attributes.listMarginRight = 20;
-                            attributes.listNumberingReversed = false;
-                            attributes.listStyleType = 'decimal-rtl';
-                            attributes.listStyleTypeRtl = true;
-                            attributes.textRtl = true;
-                            if (styleOptions.listStyle) {
-                                attributes.listStyle = styleOptions.listStyle;
-                            }
-                        } else if (styleOptions && styleOptions.listFormat) {
-                            // English lists still need paragraph settings
-                            attributes.paragraphIndent = 20;
-                            attributes.paragraphSpacing = 10;
-                        }
-                    } else {
-                        // Ensure English lists get indentation too
-                         if (styleOptions && styleOptions.listFormat) {
-                            attributes.paragraphIndent = 20;
-                            attributes.paragraphSpacing = 10;
-                         }
+                    // Special handling for RTL lists
+                    if (styleOptions?.listFormat === 'rtl') {
+                        attributes.paragraphIndent = 20;
+                        attributes.paragraphSpacing = 10;
+                        attributes.listStyle = styleOptions.listStyle || 'rtl'; // Use provided or default
+                        attributes.listReversed = false;
+                        attributes.listStylePosition = 'outside';
+                        attributes.listDirection = 'rtl';
+                        attributes.listMarginRight = 20;
+                        attributes.listNumberingReversed = false;
+                        attributes.listStyleType = 'decimal-rtl';
+                        attributes.listStyleTypeRtl = true;
+                        attributes.textRtl = true;
+                    } else if (styleOptions?.listFormat) {
+                        // Handle non-RTL lists (if needed)
+                        attributes.paragraphIndent = 20;
+                        attributes.paragraphSpacing = 10;
                     }
-                    
-                    // Apply the attributes
-                    console.log("Applying attributes with max width:", attributes);
-                    await framer.setAttributes(textNode.id, attributes);
-                    
-                } catch (styleError) {
-                    console.error("Error applying text styles:", styleError);
                 }
+                
+                // Apply the attributes
+                console.log("Applying attributes:", attributes);
+                await framer.setAttributes(textNode.id, attributes);
+                showToast({ message: t('textAddedSuccess'), type: 'success' }); // Success feedback
+                
+            } catch (styleError) {
+                console.error("Error applying text styles:", styleError);
+                showToast({ message: t('errorApplyingStyles'), type: 'warning' }); // Warn about style issues
             }
         } catch (error) {
             console.error("Error adding text to canvas:", error);
             showToast({
                 message: t('errorAddingText'),
-                type: 'error',
-                duration: 5000
+                type: 'error'
             });
         }
     }
