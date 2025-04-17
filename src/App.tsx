@@ -72,26 +72,28 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 }
 
 // Initial UI configuration - simplified and more robust
-try {
-  console.log("Initializing Framer UI");
-  framer.showUI({
-    position: "center",
-    width: 320, 
-    minHeight: 746,
-    resizable: false,
-  });
-  console.log("Framer UI initialized successfully");
-} catch (error) {
-  console.error("Error initializing Framer UI:", error);
-  // Fallback to default showUI if specific options fail
+useEffect(() => {
   try {
-    console.log("Attempting fallback UI initialization");
-    framer.showUI();
-    console.log("Fallback UI initialization succeeded");
-  } catch (innerError) {
-    console.error("Fallback UI initialization failed:", innerError);
+    console.log("Initializing Framer UI");
+    framer.showUI({
+      position: "center",
+      width: 320, 
+      height: 746,
+      resizable: false,
+    });
+    console.log("Framer UI initialized successfully");
+  } catch (error) {
+    console.error("Error initializing Framer UI:", error);
+    // Fallback to default showUI if specific options fail
+    try {
+      console.log("Attempting fallback UI initialization");
+      framer.showUI();
+      console.log("Fallback UI initialization succeeded");
+    } catch (innerError) {
+      console.error("Fallback UI initialization failed:", innerError);
+    }
   }
-}
+}, []);
 
 function useSelection() {
     const [selection, setSelection] = useState<CanvasNode[]>([])
