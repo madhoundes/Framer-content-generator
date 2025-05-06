@@ -7,6 +7,7 @@ import LengthControl, { LengthControlType, LabelType } from './LengthControl';
 import Icon from './ui/icon';
 import { useToast } from '../context/ToastContext';
 import { detectTextDirection, getTextAlignment } from '../utils/detectTextDirection';
+import './TextGenerator.css'; // Import the component-specific CSS
 
 // Sample text for each category
 type ContentCategory = 'technology' | 'business' | 'health' | 'environment' | 'entertainment' | 'finance' | 'gaming' | 'social';
@@ -843,7 +844,7 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({ onAddToCanvas }) => {
         <div className="paragraph-counter" style={{
           color: lengthValue >= 45 ? '#ef4444' : lengthValue >= 40 ? '#f97316' : '#3b82f6',
           fontSize: '0.85rem',
-          marginTop: '0.5rem',
+          marginTop: '0.25rem',
           display: 'flex',
           justifyContent: 'flex-end',
           alignItems: 'center',

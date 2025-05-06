@@ -1,0 +1,12 @@
+{
+  "common": {
+    "close": "Close"
+  },
+  "banner": {
+    "title": "Got a project in mind?",
+    "description": "Bring your vision to life with our custom freelance services, tailored to your needs.",
+    "getTemplate": "Hire me",
+    "hireMe": "Upgrade your website and get 50% off",
+    "buyMeCoffee": "Buy me a coffee"
+  }
+} 

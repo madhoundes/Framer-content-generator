@@ -229,14 +229,15 @@ function AppContent() {
             // Check if we're in RTL mode
             const isRtl = styleOptions && styleOptions.direction === 'rtl';
             
-            // --- Define Maximum Width --- 
-            const MAX_WIDTH = 650; // Set a maximum width for the text layer
+            // Enforce maximum width of 650px
+            const MAX_WIDTH = 650;
             
-            // Estimate number of lines (using the defined MAX_WIDTH)
+            // Estimate number of lines
             const estimatedLines = estimateLines(text, MAX_WIDTH);
             
             // Show warning for very long content
             if (estimatedLines > 10) {
+                // Force a new toast by adding a timestamp to the message
                 showToast({
                     message: t('longContentWarning'),
                     type: 'warning',
@@ -245,73 +246,92 @@ function AppContent() {
                 console.log("Showing long content warning toast");
             }
             
-            // Add text to canvas
+            // Add text to canvas - use the basic method first to ensure it works
             const textNode: any = await framer.addText(text);
             
-            if (!textNode || !textNode.id) {
-                console.error("Failed to create text node or node ID is missing");
-                showToast({ message: t('errorAddingText'), type: 'error' });
+            if (!textNode) {
+                console.error("Failed to create text node");
                 return;
             }
             
             console.log("Text node created:", textNode.id);
             
-            // Apply style options and width constraint
-            try {
-                // Create attributes object with fixed width and auto-height
-                const attributes: any = {
-                    width: MAX_WIDTH,
-                    textAutoResize: 'HEIGHT', // Allow height to adjust based on content
-                    maxWidth: MAX_WIDTH,     // Ensure max width is enforced
-                    lineHeight: styleOptions?.lineHeight || 1.5 // Consistent line height
-                };
-                
-                // Add RTL properties if needed
-                if (isRtl) {
-                    attributes.textAlign = 'right';
-                    attributes.direction = 'rtl';
-                    attributes.textDirection = 'RTL';
-                    attributes.textAlignHorizontal = 'right';
-                    attributes.horizontalAlignment = 'right';
-                    attributes.alignment = 'right';
-                    attributes.paragraphAlignment = 'right';
-                    attributes.paragraphAlignHorizontal = 'right';
-                    attributes.textAlignVertical = 'top';
+            // Apply style options to the text node after creation
+            if (textNode && textNode.id) {
+                try {
+                    // Create attributes object with fixed width properties
+                    const attributes: any = {
+                        width: MAX_WIDTH,
+                        // Set fixed width mode - don't auto-fit
+                        textAutoResize: 'HEIGHT',
+                        // Ensure max width is enforced
+                        maxWidth: MAX_WIDTH,
+                        // Set consistent line height for all text types
+                        lineHeight: styleOptions && styleOptions.lineHeight ? styleOptions.lineHeight : 1.5
+                    };
                     
-                    // Special handling for RTL lists
-                    if (styleOptions?.listFormat === 'rtl') {
-                        attributes.paragraphIndent = 20;
-                        attributes.paragraphSpacing = 10;
-                        attributes.listStyle = styleOptions.listStyle || 'rtl'; // Use provided or default
-                        attributes.listReversed = false;
-                        attributes.listStylePosition = 'outside';
-                        attributes.listDirection = 'rtl';
-                        attributes.listMarginRight = 20;
-                        attributes.listNumberingReversed = false;
-                        attributes.listStyleType = 'decimal-rtl';
-                        attributes.listStyleTypeRtl = true;
-                        attributes.textRtl = true;
-                    } else if (styleOptions?.listFormat) {
-                        // Handle non-RTL lists (if needed)
-                        attributes.paragraphIndent = 20;
-                        attributes.paragraphSpacing = 10;
+                    // Add RTL properties if needed
+                    if (isRtl) {
+                        // Strong right alignment for RTL text
+                        attributes.textAlign = 'right';
+                        attributes.direction = 'rtl';
+                        // Set the writing direction to RTL for proper text rendering
+                        attributes.textDirection = 'RTL';
+                        
+                        // Try all possible Framer properties that might control alignment
+                        // Some of these might not work, but we're trying everything to ensure
+                        // right alignment in the Framer Canvas UI
+                        attributes.textAlignHorizontal = 'right';
+                        attributes.horizontalAlignment = 'right';
+                        attributes.alignment = 'right';
+                        attributes.paragraphAlignment = 'right';
+                        attributes.paragraphAlignHorizontal = 'right';
+                        attributes.textAlignVertical = 'top'; // Ensure vertical alignment is top
+                        
+                        // Special handling for lists
+                        if (styleOptions && styleOptions.listFormat === 'rtl') {
+                            attributes.paragraphIndent = 20;
+                            attributes.paragraphSpacing = 10;
+                            attributes.listStyle = 'rtl';
+                            // Fix for inverted numbering in RTL lists
+                            attributes.listReversed = false;
+                            attributes.listStylePosition = 'outside';
+                            // Explicitly set the list direction for ordered lists
+                            attributes.listDirection = 'rtl';
+                            // Set right margin for list items
+                            attributes.listMarginRight = 20;
+                            // Add extra support for RTL list numbering
+                            attributes.listNumberingReversed = false;
+                            attributes.listStyleType = 'decimal-rtl';
+                            attributes.listStyleTypeRtl = true;
+                            attributes.textRtl = true;
+                            // Apply other RTL-specific attributes from styleOptions
+                            if (styleOptions.listStyle) {
+                                attributes.listStyle = styleOptions.listStyle;
+                            }
+                        } else {
+                            // For English lists, ensure proper formatting
+                            if (styleOptions && styleOptions.listFormat) {
+                                attributes.paragraphIndent = 20;
+                                attributes.paragraphSpacing = 10;
+                            }
+                        }
                     }
+                    
+                    // Apply the attributes
+                    console.log("Applying attributes:", attributes);
+                    await framer.setAttributes(textNode.id, attributes);
+                    
+                } catch (styleError) {
+                    console.error("Error applying text styles:", styleError);
                 }
-                
-                // Apply the attributes
-                console.log("Applying attributes:", attributes);
-                await framer.setAttributes(textNode.id, attributes);
-                showToast({ message: t('textAddedSuccess'), type: 'success' }); // Success feedback
-                
-            } catch (styleError) {
-                console.error("Error applying text styles:", styleError);
-                showToast({ message: t('errorApplyingStyles'), type: 'warning' }); // Warn about style issues
             }
         } catch (error) {
             console.error("Error adding text to canvas:", error);
             showToast({
                 message: t('errorAddingText'),
-                type: 'error'
+                type: 'error',
+                duration: 5000
             });
         }
     }

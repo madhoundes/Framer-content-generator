@@ -32,10 +32,6 @@ const Header: React.FC = () => {
         <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', alignItems: 'center' }}>
           <LanguageSwitcher />
         </div>
-        
-        <h1 id="app-title" className="app-title">
-          Framer Text Generator
-        </h1>
       </div>
     </header>
   );

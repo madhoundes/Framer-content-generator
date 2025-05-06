@@ -1,0 +1,200 @@
+/* Banner Component Styles */
+
+.banner {
+  position: relative;
+  width: 100%;
+  background-color: #0071e3; /* Default Framer blue color, but can be customized */
+  border-radius: 8px;
+  overflow: hidden;
+  color: white;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.banner.closing {
+  transform: translateY(-10px);
+  opacity: 0;
+}
+
+.banner-content {
+  padding: 16px;
+  position: relative;
+}
+
+.banner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.banner-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+}
+
+.banner-close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.banner-close-button:hover {
+  opacity: 1;
+}
+
+.banner-description {
+  font-size: 14px;
+  margin-bottom: 12px;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.banner-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.banner-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+.banner-action-button:hover {
+  opacity: 0.8;
+}
+
+.banner-action-button.get-template {
+  background-color: black;
+  color: white;
+}
+
+.banner-action-button.buy-coffee {
+  background-color: white;
+  color: black;
+  padding: 8px 12px;
+}
+
+.coffee-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.banner-action-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.banner-action-label:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+/* Language Switcher Styles */
+.language-switcher {
+  display: inline-flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.language-switcher button {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition: color 0.2s ease;
+}
+
+.language-switcher button.active {
+  color: white;
+  font-weight: 500;
+}
+
+.language-switcher button:not(.active) {
+  color: #333;
+}
+
+.language-switcher::after {
+  content: '';
+  position: absolute;
+  height: 100%;
+  width: 50%;
+  background-color: #4794FF; /* Match the blue color from the List button */
+  border-radius: 6px;
+  left: 0;
+  top: 0;
+  transition: transform 0.3s ease;
+  color: red; /* Added red color */
+}
+
+html[dir="rtl"] .language-switcher::after {
+  left: auto;
+  right: 0;
+  transform: translateX(0);
+}
+
+.language-switcher.arabic-active::after {
+  transform: translateX(100%);
+}
+
+html[dir="rtl"] .language-switcher.arabic-active::after {
+  transform: translateX(-100%);
+}
+
+/* Text Type Button Styles - to match the List button styling */
+.text-type-button.active {
+  background-color: #4794FF;
+  color: white;
+  font-weight: 500;
+}
+
+/* RTL Support */
+html[dir="rtl"] .banner-header {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .banner-actions {
+  flex-direction: row-reverse;
+}
+
+@media (max-width: 500px) {
+  .banner-actions {
+    flex-direction: column;
+  }
+  
+  html[dir="rtl"] .banner-actions {
+    flex-direction: column;
+  }
+} 

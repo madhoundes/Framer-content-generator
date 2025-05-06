@@ -29,6 +29,12 @@ html[dir="rtl"] .length-control-label {
   flex-direction: row-reverse;
 }
 
+/* Align label text right in RTL */
+html[dir="rtl"] .length-control-title {
+  text-align: right;
+  width: 100%; /* Ensure it takes full width for alignment */
+}
+
 /* Banner action button hover effects */
 .banner-action-button {
   transition: opacity 0.3s ease;
@@ -36,4 +42,89 @@ html[dir="rtl"] .length-control-label {
 
 .banner-action-button:hover {
   opacity: 0.8;
+}
+
+/* Consistent Label Font Weight */
+.text-type-label,
+.length-control-title,
+.text-preview-title {
+  font-weight: 500;
+}
+
+/* Consistent Padding for Segmented Control Buttons */
+.text-type-button {
+  padding: 0.5rem 1rem; /* Match action buttons */
+  border: none; /* Remove default border */
+  background: none; /* Remove default background */
+  cursor: pointer;
+  font-size: 0.75rem; /* 12px */
+  font-weight: 500; /* Match action buttons */
+  color: var(--framer-color-text-secondary); /* Muted color for inactive */
+  border-radius: 0.375rem; /* Consistent rounding */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out; /* Smooth transitions */
+}
+
+.text-type-button.active {
+  /* background-color: var(--framer-color-tint); // Make active button blue */
+  color: var(--framer-color-text-reversed);
+  /* border-radius is already applied to the base class */
+}
+
+.text-type-selector {
+  display: inline-flex; /* Align buttons horizontally */
+  /* background-color: var(--framer-color-bg-secondary); // Removed background */
+  border-radius: 0.375rem; /* Rounded corners for the container */
+  padding: 2px; /* Small padding around buttons */
+  border: 1px solid var(--framer-color-divider); /* Added border */
+  /* box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25); // Removed box shadow */
+}
+
+/* Dark mode override for text type selector container */
+[data-framer-theme="dark"] .text-type-selector {
+  /* background-color: transparent; // No longer needed as base is removed */
+  /* Consider adjusting border/shadow for dark mode if needed */
+}
+
+/* Remove icon margin in RTL for category dropdown */
+html[dir="rtl"] .category-dropdown-button .icon {
+  margin-left: 0;
+}
+
+/* Styles for the ::after pseudo-element of the text type selector */
+.text-type-selector::after {
+    content: '';
+    position: absolute;
+    width: calc(33.333% - 6.67px); /* Note: Check if this calc works as expected */
+    height: calc(100% - 10px); /* Note: Check if this calc works as expected */
+    background-color: var(--framer-color-tint);
+    border-radius: 6px;
+    border: 1px solid #60a5fa;
+}
+
+/* Make check icon in active category item darker in light theme */
+/* Note: Adjust selector if .category-item or .check-icon classes are different */
+[data-framer-theme="light"] .category-item.active .check-icon {
+    color: #333333 !important; /* Use dark gray for better contrast */
+    /* If the icon is an SVG and uses fill, you might need: */
+    /* fill: #333333 !important; */
+}
+
+/* Alternative selector for libraries like Headless UI */
+[data-framer-theme="light"] [role="menuitem"][aria-checked="true"] .check-icon {
+     color: #333333 !important; /* Use dark gray for better contrast */
+}
+
+/* Style for the banner title */
+.banner-title {
+    color: white; /* Set color back to white */
+    font-weight: 500;
+}
+
+/* Style the ::after pseudo-element for the check icon in light theme */
+[data-framer-theme="light"] .category-item .check-icon::after {
+    content: ''; /* Ensure pseudo-element is generated */
+    display: block; /* Or inline-block, depending on layout needs */
+    /* Add other necessary styles like width, height, position if needed */
+    border-bottom: 1px solid #888;
+    border-left: 1px solid #888;
 }

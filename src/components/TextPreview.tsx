@@ -43,7 +43,7 @@ const TextPreview: React.FC<TextPreviewProps> = ({
       items: itemCount,
       sentences: sentenceCount
     };
-  }, [text]);
+  }, [text, textType]);
 
   const copyToClipboard = () => {
     try {

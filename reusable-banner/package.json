@@ -1,0 +1,33 @@
+{
+  "name": "reusable-banner",
+  "version": "1.0.0",
+  "description": "Reusable React banner component for Framer projects",
+  "main": "src/Banner.tsx",
+  "scripts": {
+    "build": "echo \"Building production version\" && mkdir -p dist && cp -r src locales README.md package.json dist/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react",
+    "component",
+    "banner",
+    "framer",
+    "framer-component",
+    "notification",
+    "rtl-support",
+    "i18n"
+  ],
+  "author": "Ahmed Al-Madhoun",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0",
+    "i18next": ">=20.0.0",
+    "react-i18next": ">=11.0.0",
+    "i18next-browser-languagedetector": ">=6.0.0"
+  },
+  "framer": {
+    "id": "banner-component",
+    "displayName": "Banner Component"
+  }
+} 
